@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="#快速开始">快速开始</a> ·
+  <a href="#界面预览">预览</a> ·
   <a href="#为什么是-litedock">特性</a> ·
   <a href="#和同类工具的定位差异">对比</a> ·
   <a href="#安全须知">安全须知</a> ·
@@ -25,6 +26,18 @@
 </p>
 
 ---
+
+## 界面预览
+
+| 主界面与容器状态 | 分组与 Compose 项目 |
+|---|---|
+| [![LiteDock 主界面与容器状态](docs/images/dashboard.jpg)](docs/images/dashboard.jpg) | [![LiteDock 分组与 Compose 项目](docs/images/groups.jpg)](docs/images/groups.jpg) |
+
+| 壁纸与外观设置 | 关于与运行环境 |
+|---|---|
+| [![LiteDock 壁纸与外观设置](docs/images/appearance.jpg)](docs/images/appearance.jpg) | [![LiteDock 关于与运行环境](docs/images/about.jpg)](docs/images/about.jpg) |
+
+> 截图中的容器、分组与自定义壁纸仅作界面演示；实际内容与默认样式以你的部署配置为准。
 
 ## 为什么是 LiteDock
 

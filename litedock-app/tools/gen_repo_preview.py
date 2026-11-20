@@ -250,6 +250,7 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .readme hr{border:0;border-top:1px solid var(--border);margin:20px 0}
 .readme img{height:20px;vertical-align:middle}
 .readme img[width="128"]{height:auto}
+.readme td img{height:auto;width:100%;max-width:100%;vertical-align:top}
 .readme details{border:1px solid var(--border);border-radius:6px;margin:0 0 8px;padding:8px 14px}
 .readme summary{cursor:pointer;font-weight:600}
 .readme summary::marker{color:var(--muted)}
@@ -271,8 +272,9 @@ def main():
     entries, lang_bytes, file_count = collect()
     readme = open(os.path.join(BASE, 'README.md'), encoding='utf-8').read()
     readme_html = render_md(readme)
-    # 预览页存于 .workbuddy/，README 里的仓库根相对路径（docs/logo.png）需上溯一级
+    # 预览页存于 .workbuddy/，README 里的仓库根相对路径（含点击大图链接）需上溯一级
     readme_html = readme_html.replace('src="docs/', 'src="../docs/')
+    readme_html = readme_html.replace('href="docs/', 'href="../docs/')
 
     ICON_DIR = ('<svg class="ic" viewBox="0 0 16 16" width="16" height="16" fill="#54aeff">'
                 '<path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5l-1.2-1.2A1.75 1.75 0 0 0 5.25 1H1.75Z"/></svg>')
