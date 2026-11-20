@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LiteDock · 容器管理</title>
+<link rel="stylesheet" href="/assets/app.css?v=1031">
+<link rel="icon" href="/assets/icons/litedock.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+
+<!-- 壁纸层 -->
+<div id="wallLayer" class="wall-layer"></div>
+<div id="wallMask" class="wall-mask"></div>
+<div class="wall-grain"></div>
+
+<div class="app">
+  <!-- 顶栏 -->
+  <header class="topbar glass" id="topbar">
+    <div class="topbar-bg"></div>
+    <div class="topbar-mask"></div>
+    <div class="brand">
+      <img class="brand-mark" src="/assets/icons/litedock.png" alt="LiteDock" width="42" height="42">
+      <div class="brand-txt">
+        <h1 id="brandTitle">LiteDock</h1>
+        <span id="brandSub">NAS容器管理</span>
+      </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="top-actions">
+      <div class="search-wrap glass-chip">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="搜索容器 / 镜像" autocomplete="off">
+      </div>
+      <button class="icon-btn glass-chip" id="btnRefresh" title="刷新">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 6"/><path d="M20 4v7h-7"/></svg>
+      </button>
+      <button class="icon-btn glass-chip" id="btnSettings" title="外观与设置">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.36.4.67.74.87.3.18.65.28 1 .28H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主体 -->
+  <main id="board" class="board"></main>
+
+  <footer class="footer">
+    <span id="footLeft">LiteDock · 极简本地容器管理面板</span>
+    <span id="footRight"></span>
+  </footer>
+</div>
+
+<!-- 设置抽屉 -->
+<div id="drawerMask" class="drawer-mask"></div>
+<aside id="drawer" class="drawer">
+  <div class="drawer-head">
+    <div><h2>外观与设置</h2><p>壁纸 · 分组 · 卡片 · 快捷访问 · 图标</p></div>
+    <button class="icon-btn" id="btnCloseDrawer">✕</button>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="wall">壁纸</button>
+    <button class="tab" data-tab="look">外观</button>
+    <button class="tab" data-tab="group">分组</button>
+    <button class="tab" data-tab="card">卡片</button>
+    <button class="tab" data-tab="icon">图标</button>
+    <button class="tab" data-tab="backup">备份</button>
+    <button class="tab" data-tab="about">关于</button>
+  </nav>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<!-- 日志弹窗 -->
+<div id="modalMask" class="modal-mask">
+  <div class="modal glass">
+    <div class="modal-head"><h3 id="modalTitle">日志</h3><button class="icon-btn log-auto" id="btnLogAuto" title="自动刷新（5 秒）">⟳</button><button class="icon-btn" id="btnCloseModal">✕</button></div>
+    <pre id="modalLog" class="logbox"></pre>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- 访问密码遮罩（部署时设了 ACCESS_PASSWORD 才会出现） -->
+<div id="loginMask" class="login-mask">
+  <div class="login-box glass">
+    <div class="login-brand">
+      <img class="brand-mark" src="/assets/icons/litedock.png" alt="LiteDock" width="46" height="46">
+      <div class="login-brand-txt"><b>LiteDock</b><span>需要密码进入</span></div>
+    </div>
+    <input id="loginPw" class="login-input" type="password" placeholder="请输入访问密码" autocomplete="off">
+    <button id="btnLogin" class="btn primary wide">进入</button>
+    <div id="loginErr" class="login-err"></div>
+    <div class="login-hint">访问密码由部署时的 <code>ACCESS_PASSWORD</code> 环境变量设定；留空则无需密码。</div>
+  </div>
+</div>
+
+<script src="/assets/app.js?v=1031"></script>
+</body>
+</html>

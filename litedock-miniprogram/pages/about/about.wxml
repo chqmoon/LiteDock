@@ -1,0 +1,41 @@
+<view class="page about-page">
+
+  <view class="brand-card">
+    <image class="brand-mark" src="/assets/logo.png" mode="aspectFill" />
+    <text class="brand-name">LiteDock Mini</text>
+    <text class="brand-sub">极简容器管理面板 · 移动版</text>
+    <text class="brand-ver">小程序 {{miniVersion}} · 服务端 {{appVersion}}</text>
+  </view>
+
+  <view class="card">
+    <view class="row-between">
+      <text class="section-title">运行环境</text>
+      <button class="btn btn-small btn-ghost" bindtap="refresh">刷新</button>
+    </view>
+    <view class="divider"></view>
+    <view class="kv" wx:for="{{envRows}}" wx:for-item="r" wx:key="k">
+      <text class="kv-k">{{r.k}}</text>
+      <text class="kv-v">{{r.v}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="section-title">当前连接</text>
+    <view class="divider"></view>
+    <view class="kv" wx:for="{{connRows}}" wx:for-item="r" wx:key="k">
+      <text class="kv-k">{{r.k}}</text>
+      <text class="kv-v">{{r.v}}</text>
+    </view>
+  </view>
+
+  <view class="card license-card">
+    <text class="section-title">许可与来源</text>
+    <view class="divider"></view>
+    <text class="license-text">LiteDock 及其小程序为独立编写的原创项目，前后端代码与界面均自行实现，未包含或改写任何第三方项目源码，不受第三方开源许可证约束；本项目采用 MIT 许可证，可自由使用、修改与再分发。</text>
+    <text class="license-text license-gap">内置容器图标来自开源项目 homarr-labs/dashboard-icons（MIT 许可，全量引入 3900+ 个），各图标商标归原厂商所有，在此感谢该项目的整理与维护。</text>
+  </view>
+
+  <text class="about-sign">LiteDock Mini · By Stark-C</text>
+
+  <view class="foot-space"></view>
+</view>

@@ -1,0 +1,408 @@
+/* ===== 全局 app.wxss（1:1 转换） ===== */
+.ld-root {
+  min-height: 100%;
+  background: #f4f6fb;
+  color: #1f2430;
+  font-size: 3.7333vw;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  font-size: 3.7333vw;
+  line-height: 1.4;
+  border-radius: 2.1333vw;
+  background: transparent;
+  color: #1f2430;
+}
+button::after { border: none; }
+
+.page {
+  padding: 3.2vw 3.2vw calc(6.4vw + env(safe-area-inset-bottom));
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 3.2vw;
+  padding: 3.2vw;
+  margin-bottom: 2.6667vw;
+  box-shadow: 0 1.0667vw 4vw rgba(36, 50, 90, .06);
+}
+
+.row { display: flex; align-items: center; }
+.row-between { display: flex; align-items: center; justify-content: space-between; }
+.grow { flex: 1; min-width: 0; }
+
+.title { font-size: 4.8vw; font-weight: 700; letter-spacing: 1px; }
+.subtitle { font-size: 3.2vw; color: #8b93a5; margin-top: 0.8vw; }
+.section-title { font-size: 3.7333vw; font-weight: 700; color: #1f2430; }
+.muted { font-size: 3.2vw; color: #8b93a5; }
+.tiny { font-size: 2.9333vw; color: #a3aab9; }
+.strong { font-weight: 700; }
+
+.btn {
+  min-height: 11.7333vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2.4vw;
+  background: #f1f3fa;
+  color: #3f4859;
+  font-size: 3.7333vw;
+  font-weight: 600;
+}
+.btn-primary { background: #6c7cff; color: #ffffff; }
+.btn-ghost { background: #ffffff; border: 1px solid #e5e9f2; color: #4a5468; }
+.btn-danger { background: #fff1f0; color: #d0564a; }
+.btn-small { min-height: 8.5333vw; font-size: 3.3333vw; border-radius: 1.8667vw; padding: 0 2.9333vw; }
+.btn[disabled] { opacity: .45; }
+
+
+.btn-row, .op-grid, .ct-ops { display: flex; align-items: stretch; margin-left: -1.3333vw; margin-right: -1.3333vw; }
+.btn-cell, .op-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.btn-cell { padding: 0 1.3333vw; }
+.op-cell { padding: 1.0667vw 1.3333vw; }
+.btn-cell .btn { width: 100%; margin: 0; box-sizing: border-box; }
+.op-cell .op { display: block; width: 100%; margin: 0; box-sizing: border-box; }
+.mini-cell { flex: 0 0 auto; padding-right: 2.1333vw; }
+.mini-cell:last-child { padding-right: 0; }
+.mini-cell .mini-btn { display: block; width: 100%; margin: 0; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 7.4667vw;
+  padding: 0 2.6667vw;
+  border-radius: 1.8667vw;
+  background: #f1f3fa;
+  color: #4a5468;
+  font-size: 3.2vw;
+  margin: 0 1.6vw 1.6vw 0;
+}
+
+.divider { height: 1px; background: #eef1f7; margin: 2.6667vw 0; }
+
+.state-card {
+  background: #ffffff;
+  border-radius: 3.2vw;
+  padding: 9.6vw 5.3333vw;
+  text-align: center;
+  box-shadow: 0 1.0667vw 4vw rgba(36, 50, 90, .06);
+}
+.state-icon {
+  display: block;
+  font-size: 9.6vw;
+  color: #c3c9da;
+  margin-bottom: 2.6667vw;
+}
+.state-title { display: block; font-size: 4.2667vw; font-weight: 700; margin-bottom: 1.6vw; }
+.state-desc { display: block; font-size: 3.3333vw; color: #8b93a5; line-height: 1.7; margin-bottom: 4.2667vw; }
+
+.field { margin-bottom: 3.7333vw; }
+.field-label { display: block; font-size: 3.3333vw; color: #6b7385; margin-bottom: 1.6vw; font-weight: 600; }
+.field-input {
+  width: 100%;
+  min-height: 11.7333vw;
+  box-sizing: border-box;
+  padding: 0 3.2vw;
+  border-radius: 2.4vw;
+  background: #f6f8fc;
+  border: 1px solid #e9edf5;
+  font-size: 3.7333vw;
+  color: #1f2430;
+}
+.field-hint { display: block; font-size: 2.9333vw; color: #a3aab9; margin-top: 1.3333vw; line-height: 1.6; }
+
+.led { width: 2.1333vw; height: 2.1333vw; border-radius: 50%; display: inline-block; margin-right: 1.3333vw; }
+
+.notice {
+  background: #f0f3ff;
+  border-radius: 2.4vw;
+  padding: 2.6667vw 3.2vw;
+  font-size: 3.2vw;
+  color: #5a6480;
+  line-height: 1.7;
+}
+.notice-warn { background: #fff7ec; color: #8a6a3c; }
+
+
+/* ===== index.wxss（作用域 .scope-index） ===== */
+.scope-index .index-page { padding-top: 2.6667vw; }.scope-index .hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3.7333vw;
+  background: linear-gradient(135deg, #eef1ff 0%, #f3f0ff 48%, #e9f8f4 100%);
+  border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 1.3333vw 4.5333vw rgba(18, 28, 58, .08);
+  margin-bottom: 2.6667vw;
+}.scope-index .hero-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: .22; transform: scale(1.06); }.scope-index .hero-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, .58); }.scope-index .hero-inner { position: relative; z-index: 1; padding: 3.7333vw; }.scope-index .hero-title { display: block; font-size: 5.3333vw; font-weight: 700; letter-spacing: 1px; color: #20263a; }.scope-index .hero-sub { display: block; font-size: 3.2vw; color: #5c6580; margin-top: 0.8vw; }.scope-index .conn-badge {
+  display: flex;
+  align-items: center;
+  min-height: 8vw;
+  padding: 0 2.4vw;
+  border-radius: 4vw;
+  background: rgba(255, 255, 255, .92);
+  border: 1px solid rgba(30, 40, 70, .08);
+  font-size: 3.0667vw;
+  color: #3f4859;
+  max-width: 34.6667vw;
+}.scope-index .conn-badge text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }.scope-index .conn-arrow { margin-left: 1.0667vw; color: #8992a8; font-size: 3.7333vw; }.scope-index .stat-panel { display: flex; flex-wrap: wrap; margin: 3.4667vw -0.8vw 0; }.scope-index .stat {
+  flex: 0 0 calc(50% - 1.6vw);
+  box-sizing: border-box;
+  margin: 0.8vw;
+  padding: 2.4vw 2.6667vw 2.6667vw;
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid rgba(30, 40, 70, .07);
+  border-radius: 2.4vw;
+  box-shadow: 0 0.5333vw 2.1333vw rgba(36, 50, 90, .06);
+  min-width: 0;
+}.scope-index .stat-label { display: flex; align-items: center; font-size: 3.0667vw; font-weight: 600; color: #5c6580; }.scope-index .stat-dot { width: 1.6vw; height: 1.6vw; border-radius: 50%; display: inline-block; margin-right: 1.3333vw; flex: 0 0 1.6vw; }.scope-index .s-green { background: #25c07a; }.scope-index .s-indigo { background: #7c8cff; }.scope-index .s-teal { background: #32b6a8; }.scope-index .s-slate { background: #9aa3b8; }.scope-index .stat-num {
+  display: block;
+  font-size: 5.3333vw;
+  font-weight: 700;
+  color: #20263a;
+  line-height: 1.3;
+  margin-top: 0.8vw;
+}.scope-index .stat-num-sm {
+  font-size: 3.3333vw;
+  line-height: 1.8;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}.scope-index .search-bar {
+  display: flex;
+  align-items: center;
+  min-height: 11.7333vw;
+  background: #ffffff;
+  border-radius: 2.6667vw;
+  padding: 0 3.2vw;
+  margin-bottom: 2.6667vw;
+  box-shadow: 0 0.8vw 2.9333vw rgba(36, 50, 90, .05);
+}.scope-index .search-icon { font-size: 5.0667vw; color: #9aa3b2; margin-right: 1.8667vw; }.scope-index .search-input { flex: 1; min-width: 0; font-size: 3.6vw; color: #1f2430; height: 11.7333vw; }.scope-index .search-ph { color: #b0b7c6; }.scope-index .search-clear { font-size: 5.3333vw; color: #a3aab9; padding: 0 1.0667vw 0 2.6667vw; }.scope-index .welcome {
+  margin-top: 13.3333vw;
+  background: #ffffff;
+  border-radius: 3.7333vw;
+  padding: 8.5333vw 5.3333vw 6.9333vw;
+  text-align: center;
+  box-shadow: 0 1.0667vw 4vw rgba(36, 50, 90, .06);
+}.scope-index .welcome-mark {
+  display: block;
+  width: 16vw;
+  height: 16vw;
+  margin: 0 auto 3.7333vw;
+  border-radius: 22%;
+  box-shadow: 0 1.6vw 3.4667vw rgba(20, 96, 226, .22);
+}.scope-index .welcome-title { display: block; font-size: 4.5333vw; font-weight: 700; color: #232a42; }.scope-index .welcome-desc { display: block; font-size: 3.3333vw; color: #8b93a5; line-height: 1.7; margin: 2.1333vw 0 4.2667vw; }.scope-index .welcome-eg { background: #f6f8fc; border-radius: 2.4vw; padding: 2.6667vw 3.2vw; margin-bottom: 4.8vw; text-align: left; }.scope-index .welcome-eg-row { display: flex; align-items: center; padding: 1.0667vw 0; }.scope-index .welcome-eg-k { width: 21.3333vw; flex: 0 0 21.3333vw; font-size: 3.0667vw; color: #6b7385; font-weight: 600; }.scope-index .welcome-eg-v { flex: 1; min-width: 0; font-size: 2.9333vw; color: #4a5b8c; word-break: break-all; }.scope-index .welcome-btn { margin-bottom: 1.0667vw; }.scope-index .state-gap { height: 3.2vw; }.scope-index .group { position: relative; border-radius: 3.2vw; margin-bottom: 2.6667vw; overflow: hidden; }.scope-index .group-head { display: flex; align-items: center; min-height: 11.7333vw; padding: 1.0667vw 0.5333vw; }.scope-index .group-bar { width: 1.0667vw; height: 5.8667vw; border-radius: 0.5333vw; margin-right: 2.4vw; }.scope-index .group-title { display: block; font-size: 4.1333vw; font-weight: 700; color: #232a42; }.scope-index .group-sub { display: block; font-size: 3.0667vw; color: #8b93a5; margin-top: 0.5333vw; }.scope-index .group-toggle {
+  min-height: 8vw;
+  line-height: 8vw;
+  padding: 0 2.9333vw;
+  border-radius: 2.1333vw;
+  background: #ffffff;
+  border: 1px solid #e5e9f2;
+  color: #4a5468;
+  font-size: 3.2vw;
+  font-weight: 600;
+}.scope-index .group-toggle.is-on { background: #e9edff; border-color: #c9d1ff; color: #4b5bd0; }.scope-index .group-folded {
+  margin: 0 0.5333vw 2.1333vw;
+  padding: 3.4667vw 3.2vw;
+  border: 1px dashed #d9dfec;
+  border-radius: 2.4vw;
+  font-size: 3.2vw;
+  color: #9aa3b2;
+  line-height: 1.6;
+}.scope-index .ct {
+  position: relative;
+  overflow: hidden;
+  
+  background: rgba(255, 255, 255, .86);
+  border-radius: 3.2vw;
+  padding: 3.2vw;
+  margin-bottom: 2.6667vw;
+  box-shadow: 0 1.0667vw 4vw rgba(36, 50, 90, .06);
+}.scope-index .ct-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; transform: scale(1.08); }.scope-index .ct-top { position: relative; display: flex; align-items: center; }.scope-index .ct-icon {
+  width: 11.7333vw;
+  height: 11.7333vw;
+  flex: 0 0 11.7333vw;
+  border-radius: 2.9333vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4.2667vw;
+  font-weight: 700;
+  margin-right: 2.6667vw;
+  overflow: hidden;
+}.scope-index .ct-icon-img { width: 11.7333vw; height: 11.7333vw; }.scope-index .ct-icon-img.icon-custom { object-fit: cover; }.scope-index .ct-meta { overflow: hidden; }.scope-index .ct-name { display: block; font-size: 4vw; font-weight: 700; color: #1f2430; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }.scope-index .ct-image { display: block; font-size: 3.0667vw; color: #788298; margin-top: 0.6667vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }.scope-index .ct-state { display: flex; align-items: center; font-size: 3.0667vw; color: #556076; white-space: nowrap; margin-left: 1.6vw; }.scope-index .self-flag { display: inline-flex; align-items: center; margin-left: 1.3333vw; padding: 1px 1.3333vw; border-radius: 1.6vw; background: #e6ecff; color: #4657c8; font-size: 2.8vw; font-weight: 700; white-space: nowrap; }.scope-index .ct-status { display: block; font-size: 3.2vw; color: #556076; margin: 2.6667vw 0 2.4vw; }.scope-index .ct-status.status-warn { color: #c07a1e; }.scope-index .status-warn-tag { display: inline-block; margin-left: 1.6vw; padding: 0.2667vw 1.6vw; border-radius: 1.3333vw; background: rgba(230,168,32,.18); color: #a6700d; font-size: 2.8vw; font-weight: 700; }.scope-index .meters { display: flex; margin-bottom: 2.4vw; }.scope-index .meter { flex: 1; min-width: 0; padding-right: 2.6667vw; }.scope-index .meter:last-child { padding-right: 0; }.scope-index .meter-label { display: flex; justify-content: space-between; font-size: 2.9333vw; color: #6f7a91; margin-bottom: 1.0667vw; }.scope-index .meter-label .strong { color: #333d54; }.scope-index .bar { height: 1.6vw; border-radius: 0.8vw; background: rgba(30,40,70,.14); overflow: hidden; }.scope-index .bar-fill { height: 100%; border-radius: 0.8vw; background: linear-gradient(90deg,#7c8cff,#a88bff); }.scope-index .bar-fill.warn { background: linear-gradient(90deg,#f5a742,#ef6b6b); }.scope-index .ports { margin-bottom: 2.4vw; }.scope-index .ports-label {
+  display: block;
+  font-size: 3.0667vw;
+  font-weight: 700;
+  color: #6b7385;
+  border-left: 0.8vw solid #6c7cff;
+  padding-left: 1.6vw;
+  margin-bottom: 1.6vw;
+  line-height: 1.2;
+}.scope-index .chips { display: flex; flex-wrap: wrap; }.scope-index .port-chip {
+  min-height: 7.7333vw;
+  font-size: 3.2vw;
+  font-weight: 600;
+  color: #5566c9;
+  background: rgba(124,140,255,.12);
+  border: 1px solid rgba(124,140,255,.28);
+}.scope-index .no-port { font-size: 3.0667vw; color: #8b93a5; }.scope-index .ct-ops { margin-top: 0.5333vw; }.scope-index .op {
+  min-height: 10.1333vw;
+  line-height: 10.1333vw;
+  text-align: center;
+  border-radius: 2.1333vw;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(30,40,70,.16);
+  color: #3f4a61;
+  font-size: 3.3333vw;
+  font-weight: 600;
+  box-shadow: 0 0.2667vw 1.0667vw rgba(36,50,90,.06);
+}.scope-index .op-primary { background: #6c7cff; color: #ffffff; border-color: #6c7cff; }.scope-index .op-disabled { display: block; min-height: 10.1333vw; line-height: 10.1333vw; text-align: center; border-radius: 2.1333vw; background: #f6f7fb; border: 1px dashed #d9deea; color: #9aa3b6; font-size: 3.0667vw; font-weight: 600; }.scope-index .self-tip { cursor: default; }.scope-index .op-full { width: 100%; margin: 0; }.scope-index .ct-project .op-full { margin-top: 1.8667vw; }.scope-index .ct-project .project-ops { margin-top: 1.6vw; }.scope-index .ct-project { background: linear-gradient(160deg, #ffffff 0%, #f7f8ff 100%); }.scope-index .foot-note { text-align: center; font-size: 2.9333vw; color: #aab1c0; padding: 2.1333vw 0 1.0667vw; }.scope-index .group-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; transform: scale(1.06); }.scope-index .group-auto-bg { background-blend-mode: normal; }.scope-index .group-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; }.scope-index .group-inner { position: relative; z-index: 2; }.scope-index .group.has-bg { overflow: hidden; padding: 1.0667vw 2.6667vw 0; }.scope-index .group.has-bg .group-title { color: #ffffff; text-shadow: 0 1px 1.0667vw rgba(0, 0, 0, .6); }.scope-index .group.has-bg .group-sub { color: rgba(255, 255, 255, .88); text-shadow: 0 1px 0.8vw rgba(0, 0, 0, .5); }.scope-index .group.has-bg .group-toggle { background: rgba(255, 255, 255, .22); border-color: rgba(255, 255, 255, .42); color: #ffffff; }.scope-index .group.has-bg .group-toggle.is-on { background: rgba(255, 255, 255, .92); border-color: rgba(255, 255, 255, .92); color: #3b4560; }.scope-index .group.has-bg .group-folded { color: rgba(255, 255, 255, .88); border-color: rgba(255, 255, 255, .42); }.scope-index .group.has-bg .ct { background: rgba(255, 255, 255, .86); }.scope-index .group.has-bg .ct.has-bg { background: #1b2233; }.scope-index .ct-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; }.scope-index .ct.has-bg { background: #1b2233; }.scope-index .ct.has-bg > .ct-top, .scope-index .ct.has-bg > .ct-status, .scope-index .ct.has-bg > .meters, .scope-index .ct.has-bg > .ports, .scope-index .ct.has-bg > .ct-ops, .scope-index .ct.has-bg > .project-ops, .scope-index .ct.has-bg > .op-full { position: relative; z-index: 2; }.scope-index .ct.has-bg .ct-name { color: #ffffff; text-shadow: 0 1px 1.0667vw rgba(0, 0, 0, .55); }.scope-index .ct.has-bg .ct-image, .scope-index .ct.has-bg .ct-status, .scope-index .ct.has-bg .ct-state, .scope-index .ct.has-bg .meter-label, .scope-index .ct.has-bg .meter-label .strong, .scope-index .ct.has-bg .ports-label, .scope-index .ct.has-bg .no-port { color: rgba(255, 255, 255, .88); text-shadow: 0 1px 0.8vw rgba(0, 0, 0, .45); }.scope-index .ct.has-bg .ports-label { border-left-color: #aab6ff; }.scope-index .ct.has-bg .bar { background: rgba(255, 255, 255, .26); }.scope-index .ct.has-bg .bar-fill { background: #9aa8ff; }.scope-index .ct.has-bg .chips .chip { background: rgba(255, 255, 255, .9); }.scope-index .ct.has-bg .op { background: rgba(255, 255, 255, .9); border-color: rgba(255, 255, 255, .6); color: #4a5468; }.scope-index .ct.has-bg .op.op-primary { background: #6c7cff; border-color: #6c7cff; color: #ffffff; }.scope-index .ct.has-bg .self-flag { background: rgba(230, 236, 255, .94); color: #4657c8; }.scope-index .ct.has-bg .op-disabled { background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .4); color: rgba(255, 255, 255, .82); }.scope-index .page-bg-base {
+  position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 0;
+  background: #0b1020;
+}.scope-index .page-bg {
+  position: fixed;
+  left: -3.2vw; top: -3.2vw;
+  width: calc(100% + 6.4vw); height: calc(100% + 6.4vw);
+  z-index: 0;
+}.scope-index .page-bg-mask {
+  position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 0;
+  pointer-events: none;
+}.scope-index .content { position: relative; z-index: 1; }.scope-index .hero.hero-has-bg {
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .5);
+  box-shadow: 0 1.3333vw 4.5333vw rgba(0, 0, 0, .28);
+}.scope-index .hero.hero-has-bg .hero-bg { opacity: 1; }.scope-index .hero.hero-has-bg .hero-mask { background: rgba(10, 16, 34, .42); }.scope-index .hero.hero-has-bg .hero-title { color: #ffffff; text-shadow: 0 0.2667vw 1.6vw rgba(0, 0, 0, .55); }.scope-index .hero.hero-has-bg .hero-sub { color: rgba(255, 255, 255, .85); text-shadow: 0 1px 1.0667vw rgba(0, 0, 0, .5); }.scope-index .hero.hero-has-bg .conn-badge { background: rgba(255, 255, 255, .92); border-color: rgba(30, 40, 70, .12); color: #3f4859; }.scope-index .hero.hero-has-bg .stat { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .32); box-shadow: none; }.scope-index .hero.hero-has-bg .stat-label { color: rgba(255, 255, 255, .88); }.scope-index .hero.hero-has-bg .stat-num, .scope-index .hero.hero-has-bg .stat-num-sm { color: #ffffff; text-shadow: 0 1px 1.0667vw rgba(0, 0, 0, .45); }.scope-index .has-wall .group {
+  background: rgba(255, 255, 255, .72);
+  border: 1px solid rgba(255, 255, 255, .5);
+  box-shadow: 0 1.0667vw 4vw rgba(10, 18, 40, .18);
+}.scope-index .has-wall .foot-note { color: rgba(255, 255, 255, .78); text-shadow: 0 1px 0.8vw rgba(0, 0, 0, .55); }
+
+
+/* ===== detail.wxss（作用域 .scope-detail） ===== */
+.scope-detail .detail-page { padding-top: 3.2vw; }.scope-detail .ct-icon {
+  width: 12.8vw;
+  height: 12.8vw;
+  flex: 0 0 12.8vw;
+  border-radius: 3.2vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4.5333vw;
+  font-weight: 700;
+  margin-right: 2.6667vw;
+}.scope-detail .ct-meta { overflow: hidden; }.scope-detail .ct-name { display: block; font-size: 4.2667vw; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }.scope-detail .ct-image { display: block; font-size: 3.0667vw; color: #788298; margin-top: 0.8vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }.scope-detail .ct-state { display: flex; align-items: center; font-size: 3.2vw; color: #556076; white-space: nowrap; margin-left: 1.6vw; }.scope-detail .self-flag { display: inline-flex; align-items: center; margin-left: 1.3333vw; padding: 1px 1.3333vw; border-radius: 1.6vw; background: #e6ecff; color: #4657c8; font-size: 2.8vw; font-weight: 700; white-space: nowrap; }.scope-detail .kv { display: flex; align-items: flex-start; padding: 1.6vw 0; }.scope-detail .kv-k { width: 25.3333vw; flex: 0 0 25.3333vw; font-size: 3.2vw; color: #6f7a91; }.scope-detail .kv-v { flex: 1; min-width: 0; font-size: 3.3333vw; color: #333d54; word-break: break-all; }.scope-detail .kv-mono { font-family: "SFMono-Regular", Consolas, monospace; }.scope-detail .meter-detail { margin-bottom: 3.2vw; }.scope-detail .meter-label { display: flex; justify-content: space-between; font-size: 3.2vw; color: #6f7a91; margin-bottom: 1.3333vw; }.scope-detail .meter-label .strong { color: #333d54; }.scope-detail .bar { height: 1.6vw; border-radius: 0.8vw; background: rgba(30,40,70,.14); overflow: hidden; }.scope-detail .bar-fill { height: 100%; border-radius: 0.8vw; background: linear-gradient(90deg,#7c8cff,#a88bff); }.scope-detail .bar-fill.warn { background: linear-gradient(90deg,#f5a742,#ef6b6b); }.scope-detail .chips { display: flex; flex-wrap: wrap; }.scope-detail .port-chip { min-height: 8vw; font-size: 3.2vw; font-weight: 600; color: #5566c9; background: rgba(124,140,255,.12); border: 1px solid rgba(124,140,255,.28); }.scope-detail .no-port { font-size: 3.2vw; color: #8b93a5; }.scope-detail .port-table { margin-top: 2.1333vw; border-top: 1px solid #eef1f7; }.scope-detail .port-row { display: flex; align-items: center; min-height: 9.6vw; border-bottom: 1px solid #f3f5fa; }.scope-detail .port-host { width: 32vw; font-size: 3.3333vw; font-weight: 600; color: #5566c9; }.scope-detail .port-desc { flex: 1; font-size: 3.0667vw; color: #788298; }.scope-detail .op-grid { margin-bottom: 1.0667vw; }.scope-detail .op {
+  min-height: 11.2vw;
+  line-height: 11.2vw;
+  text-align: center;
+  border-radius: 2.1333vw;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(30,40,70,.16);
+  color: #3f4a61;
+  font-size: 3.4667vw;
+  font-weight: 600;
+  box-shadow: 0 0.2667vw 1.0667vw rgba(36,50,90,.06);
+}.scope-detail .op-primary { background: #6c7cff; color: #ffffff; border-color: #6c7cff; }.scope-detail .op-danger { background: #fff1f0; color: #d0564a; border-color: #f7dcd9; }.scope-detail .log-box {
+  min-height: 26.6667vw;
+  max-height: 69.3333vw;
+  background: #1e2433;
+  border-radius: 2.1333vw;
+  padding: 2.6667vw;
+  box-sizing: border-box;
+}.scope-detail .log-text { font-size: 2.8vw; line-height: 1.7; color: #cfd7ea; font-family: "SFMono-Regular", Consolas, monospace; word-break: break-all; }.scope-detail .log-box .tiny { color: #8b96ad; }.scope-detail .log-ops { display: flex; align-items: center; gap: 1.3333vw; }.scope-detail .log-ops .btn { min-width: 11.2vw; }.scope-detail .log-ops .btn.on { color: #5566c9; background: rgba(124,140,255,.14); border-color: rgba(124,140,255,.55); }.scope-detail .ct-icon { overflow: hidden; }.scope-detail .ct-icon-img { width: 12.8vw; height: 12.8vw; }.scope-detail .ct-icon-img.icon-custom { object-fit: cover; }.scope-detail .detail-overview { position: relative; overflow: hidden; }.scope-detail .detail-ov-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; transform: scale(1.08); }.scope-detail .detail-ov-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; }.scope-detail .detail-overview > .row, .scope-detail .detail-overview > .divider, .scope-detail .detail-overview > .kv { position: relative; z-index: 2; }.scope-detail .detail-overview.has-bg { background: #1b2233; }.scope-detail .detail-overview.has-bg .ct-name, .scope-detail .detail-overview.has-bg .kv-v { color: #ffffff; text-shadow: 0 1px 0.8vw rgba(0, 0, 0, .5); }.scope-detail .detail-overview.has-bg .ct-image, .scope-detail .detail-overview.has-bg .ct-state, .scope-detail .detail-overview.has-bg .kv-k { color: rgba(255, 255, 255, .85); }.scope-detail .detail-overview.has-bg .self-flag { background: rgba(230, 236, 255, .94); color: #4657c8; }.scope-detail .detail-overview.has-bg .divider { border-color: rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .2); }
+
+
+/* ===== settings.wxss（作用域 .scope-settings） ===== */
+.scope-settings .settings-page { padding-top: 3.2vw; }.scope-settings .setting-gap { margin-bottom: 2.6667vw; }.scope-settings .link-status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.6667vw; }.scope-settings .link-status { flex: 1; min-width: 0; font-size: 3.0667vw; color: #a3aab9; word-break: break-all; }.scope-settings .link-status.is-ok { color: #17845f; }.scope-settings .link-type {
+  flex: 0 0 auto;
+  margin-left: 1.6vw;
+  padding: 0.5333vw 1.8667vw;
+  border-radius: 1.0667vw;
+  background: #eaf1ff;
+  color: #4a72b8;
+  font-size: 2.6667vw;
+  font-weight: 600;
+}.scope-settings .link-actions { margin-top: 0.5333vw; }.scope-settings .link-help { margin-top: 2.6667vw; }.scope-settings .test-result { display: block; margin-top: 2.6667vw; font-size: 3.2vw; line-height: 1.6; }.scope-settings .test-result.ok { color: #17845f; }.scope-settings .test-result.fail { color: #d0564a; }.scope-settings .hint-card {
+  background: #f0f3ff;
+  border-radius: 2.4vw;
+  padding: 3.2vw;
+  font-size: 3.2vw;
+  color: #5a6480;
+  line-height: 1.7;
+}.scope-settings .foot-space { height: 5.3333vw; }.scope-settings .bk-item {
+  border: 1px solid #e5e9f2; border-radius: 2.4vw;
+  padding: 2.6667vw; margin-bottom: 2.1333vw; background: #fafbfe;
+}.scope-settings .bk-line { display: flex; align-items: center; flex-wrap: wrap; }.scope-settings .bk-name { font-size: 3.7333vw; font-weight: 500; color: #1f2430; }.scope-settings .bk-kind {
+  font-size: 2.6667vw; padding: 0.5333vw 1.8667vw; border-radius: 1.3333vw;
+  background: rgba(230,168,32,.16); color: #a6700d; margin-left: 1.6vw;
+}.scope-settings .bk-kind.newer { background: rgba(92,124,255,.16); color: #4a63c8; }.scope-settings .bk-sub { font-size: 3.0667vw; color: #8b93a5; margin-top: 1.0667vw; word-break: break-all; display: block; }.scope-settings .bk-actions { display: flex; margin: 1.0667vw -1.3333vw 0; }.scope-settings .bk-empty { font-size: 3.0667vw; color: #a3aab9; line-height: 1.7; padding: 1.0667vw 0; }.scope-settings .op {
+  display: block; width: 100%; margin: 0; box-sizing: border-box;
+  min-height: 8.5333vw; line-height: 8.5333vw; text-align: center;
+  font-size: 3.3333vw; border-radius: 1.8667vw; border: 1px solid #e5e9f2; background: #fff; color: #4a5468;
+}.scope-settings .op-primary { background: #6c7cff; color: #fff; border-color: #6c7cff; }.scope-settings .op-danger { background: #fff1f0; color: #d0564a; border-color: #f7dcd9; }
+
+
+/* ===== connect.wxss（作用域 .scope-connect） ===== */
+.scope-connect .connect-page { padding-top: 3.2vw; }.scope-connect .empty-inline { padding: 3.2vw 0 1.6vw; }.scope-connect .conn-item { padding: 2.9333vw 0; border-bottom: 1px solid #f0f2f8; }.scope-connect .conn-item:last-child { border-bottom: none; padding-bottom: 0.5333vw; }.scope-connect .conn-name { font-size: 3.8667vw; font-weight: 700; color: #1f2430; }.scope-connect .type-tag {
+  margin-left: 1.8667vw;
+  padding: 0.5333vw 1.6vw;
+  border-radius: 1.0667vw;
+  background: #eaf1ff;
+  color: #4a72b8;
+  font-size: 2.6667vw;
+  font-weight: 600;
+}.scope-connect .type-tag.is-proxy { background: #e9f7ef; color: #22845c; }.scope-connect .active-tag { margin-left: 1.6vw; font-size: 2.8vw; color: #6c7cff; font-weight: 600; }.scope-connect .conn-url { display: block; font-size: 3.0667vw; color: #8b93a5; margin-top: 1.0667vw; word-break: break-all; }.scope-connect .conn-note { display: block; font-size: 2.9333vw; color: #a3aab9; margin-top: 0.5333vw; }.scope-connect .conn-check { font-size: 4.5333vw; color: #6c7cff; padding-left: 2.1333vw; }.scope-connect .conn-actions { display: flex; margin-top: 2.1333vw; }.scope-connect .mini-btn {
+  min-height: 8vw;
+  line-height: 8vw;
+  padding: 0 3.2vw;
+  border-radius: 1.8667vw;
+  background: #f4f6fb;
+  color: #5a6480;
+  font-size: 3.0667vw;
+}.scope-connect .mini-danger { background: #fff1f0; color: #d0564a; }.scope-connect .form-close { font-size: 5.8667vw; color: #a3aab9; line-height: 1; padding: 0 1.0667vw; }.scope-connect .detect-row { display: flex; align-items: center; margin: -1.0667vw 0 3.7333vw; }.scope-connect .detect-label { font-size: 3.0667vw; color: #8b93a5; margin-right: 1.8667vw; }.scope-connect .detect-type { padding: 0.8vw 2.4vw; border-radius: 1.3333vw; background: #eaf1ff; color: #4a72b8; font-size: 2.9333vw; font-weight: 600; }.scope-connect .adv-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 11.2vw;
+  padding: 0 0.5333vw;
+  border-top: 1px solid #eef1f7;
+  font-size: 3.3333vw;
+  color: #4a5468;
+  font-weight: 600;
+}.scope-connect .form-actions { margin-top: 0.5333vw; }.scope-connect .test-result { display: block; margin-top: 2.6667vw; font-size: 3.2vw; line-height: 1.6; }.scope-connect .test-result.ok { color: #17845f; }.scope-connect .test-result.fail { color: #d0564a; }.scope-connect .foot-space { height: 5.3333vw; }
+
+
+/* ===== about.wxss（作用域 .scope-about） ===== */
+.scope-about .about-page { padding-top: 3.2vw; }.scope-about .brand-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(150deg, #eef1ff 0%, #f7f3ff 60%, #eaf7ff 100%);
+  border-radius: 3.7333vw;
+  padding: 6.4vw 3.2vw 5.8667vw;
+  margin-bottom: 2.6667vw;
+}.scope-about .brand-mark {
+  display: block;
+  width: 14.9333vw;
+  height: 14.9333vw;
+  border-radius: 22%;
+  margin-bottom: 3.2vw;
+  box-shadow: 0 1.6vw 3.4667vw rgba(20, 96, 226, .22);
+}.scope-about .brand-name { font-size: 5.3333vw; font-weight: 700; color: #2b3350; }.scope-about .brand-sub { font-size: 3.3333vw; color: #7d869c; margin-top: 1.3333vw; }.scope-about .brand-ver { font-size: 2.9333vw; color: #9aa3b2; margin-top: 2.1333vw; }.scope-about .kv { display: flex; align-items: flex-start; padding: 1.6vw 0; }.scope-about .kv-k { width: 25.3333vw; flex: 0 0 25.3333vw; font-size: 3.2vw; color: #8b93a5; }.scope-about .kv-v { flex: 1; min-width: 0; font-size: 3.2vw; color: #3f4859; word-break: break-all; }.scope-about .license-text { display: block; font-size: 3.2vw; line-height: 1.8; color: #6b7385; }.scope-about .license-gap { margin-top: 2.1333vw; }.scope-about .about-sign {
+  display: block;
+  text-align: center;
+  font-size: 3.0667vw;
+  font-weight: 600;
+  letter-spacing: 0.2667vw;
+  color: #9aa3b2;
+  padding: 4.2667vw 0 1.0667vw;
+  border-top: 1px solid #e9edf5;
+  margin-top: 1.6vw;
+}.scope-about .foot-space { height: 5.3333vw; }

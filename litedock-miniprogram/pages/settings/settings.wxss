@@ -1,0 +1,55 @@
+.settings-page { padding-top: 24rpx; }
+
+.setting-gap { margin-bottom: 20rpx; }
+
+.link-status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20rpx; }
+.link-status { flex: 1; min-width: 0; font-size: 23rpx; color: #a3aab9; word-break: break-all; }
+.link-status.is-ok { color: #17845f; }
+.link-type {
+  flex: 0 0 auto;
+  margin-left: 12rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  background: #eaf1ff;
+  color: #4a72b8;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+.link-actions { margin-top: 4rpx; }
+.link-help { margin-top: 20rpx; }
+.test-result { display: block; margin-top: 20rpx; font-size: 24rpx; line-height: 1.6; }
+.test-result.ok { color: #17845f; }
+.test-result.fail { color: #d0564a; }
+
+.hint-card {
+  background: #f0f3ff;
+  border-radius: 18rpx;
+  padding: 24rpx;
+  font-size: 24rpx;
+  color: #5a6480;
+  line-height: 1.7;
+}
+.foot-space { height: 40rpx; }
+
+/* ===== 升级备份管理（与 Web/APP 同源；op 系列为页面级定义，不依赖 detail 页） ===== */
+.bk-item {
+  border: 1rpx solid #e5e9f2; border-radius: 18rpx;
+  padding: 20rpx; margin-bottom: 16rpx; background: #fafbfe;
+}
+.bk-line { display: flex; align-items: center; flex-wrap: wrap; }
+.bk-name { font-size: 28rpx; font-weight: 500; color: #1f2430; }
+.bk-kind {
+  font-size: 20rpx; padding: 4rpx 14rpx; border-radius: 10rpx;
+  background: rgba(230,168,32,.16); color: #a6700d; margin-left: 12rpx;
+}
+.bk-kind.newer { background: rgba(92,124,255,.16); color: #4a63c8; }
+.bk-sub { font-size: 23rpx; color: #8b93a5; margin-top: 8rpx; word-break: break-all; display: block; }
+.bk-actions { display: flex; margin: 8rpx -10rpx 0; }
+.bk-empty { font-size: 23rpx; color: #a3aab9; line-height: 1.7; padding: 8rpx 0; }
+.op {
+  display: block; width: 100%; margin: 0; box-sizing: border-box;
+  min-height: 64rpx; line-height: 64rpx; text-align: center;
+  font-size: 25rpx; border-radius: 14rpx; border: 1rpx solid #e5e9f2; background: #fff; color: #4a5468;
+}
+.op-primary { background: #6c7cff; color: #fff; border-color: #6c7cff; }
+.op-danger { background: #fff1f0; color: #d0564a; border-color: #f7dcd9; }

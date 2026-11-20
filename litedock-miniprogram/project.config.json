@@ -1,0 +1,23 @@
+{
+  "description": "LiteDock Mini — 连接 LiteDock 容器面板的极简微信小程序",
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": ".workbuddy"
+      }
+    ],
+    "include": []
+  },
+  "setting": {
+    "bundle": false,
+    "es6": true,
+    "minified": true,
+    "postcss": true,
+    "urlCheck": false
+  },
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "litedock-mini",
+  "miniprogramRoot": "./"
+}

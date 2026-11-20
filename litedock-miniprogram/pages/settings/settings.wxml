@@ -1,0 +1,54 @@
+<view class="page settings-page">
+
+  <!-- 小程序唯一的设置项：访问链接 -->
+  <view class="card">
+    <text class="section-title">访问链接</text>
+    <text class="field-hint">填 LiteDock 的地址：局域网用 http://IP:23000，外网填你已做好且可用的 HTTPS 反向代理</text>
+    <view class="divider"></view>
+
+    <view class="field">
+      <text class="field-label">LiteDock 地址</text>
+      <input class="field-input" value="{{linkDraft}}" placeholder="http://192.168.1.100:23000" bindinput="onLinkInput" />
+    </view>
+    <view class="link-status-row">
+      <text class="link-status {{linkOk ? 'is-ok' : ''}}">{{linkStatus}}</text>
+      <text wx:if="{{linkType}}" class="link-type">{{linkType}}</text>
+    </view>
+    <view class="btn-row link-actions">
+      <view class="btn-cell"><button class="btn btn-ghost" bindtap="testLink">测试连接</button></view>
+      <view class="btn-cell"><button class="btn btn-primary" bindtap="saveLink">保存并使用</button></view>
+    </view>
+    <text wx:if="{{testResult}}" class="test-result {{testOk ? 'ok' : 'fail'}}">{{testResult}}</text>
+    <text class="field-hint link-help">不写协议会自动判断：IP 补 http://，域名补 https://。地址只保存在手机本地。</text>
+  </view>
+
+  <button class="btn btn-ghost setting-gap" bindtap="goConnect">管理多套连接 / 高级选项</button>
+
+  <!-- 升级备份管理：升级独立容器后隐藏的旧版本，可一键回退或彻底删除（与 Web/APP 同源） -->
+  <view class="card">
+    <text class="section-title">升级备份</text>
+    <text class="field-hint">升级独立容器时，旧版本会自动改名备份并从面板隐藏，不会把停止的旧容器留在项目里。这里可回退到旧版本，或彻底删除备份释放空间。</text>
+    <view class="divider"></view>
+    <view wx:if="{{!backupLoaded}}" class="bk-empty">加载中…</view>
+    <block wx:elif="{{backups.length}}">
+      <view class="bk-item" wx:for="{{backups}}" wx:key="id">
+        <view class="bk-line">
+          <text class="bk-name">{{item.base}}</text>
+          <text class="bk-kind {{item.kind === 'newer' ? 'newer' : ''}}">{{item.kind === 'newer' ? '被替换的新版本' : '升级前旧版本'}}</text>
+        </view>
+        <text class="bk-sub">{{item.shortId}} · {{item.image || ''}}</text>
+        <view class="bk-actions">
+          <view class="op-cell"><button class="op op-primary" bindtap="backupRollback" data-id="{{item.id}}" data-base="{{item.base}}">回退到此版本</button></view>
+          <view class="op-cell"><button class="op op-danger" bindtap="backupDelete" data-id="{{item.id}}" data-base="{{item.base}}">彻底删除</button></view>
+        </view>
+      </view>
+    </block>
+    <view wx:else class="bk-empty">暂无升级备份。升级独立容器后，旧版本会出现在这里，可随时回退或删除。项目内容器请用项目卡的「启动 / 停止 / 重启」整体管理。</view>
+  </view>
+
+  <view class="hint-card">
+    <text>外观、分组、壁纸、卡片背景等设置都在 LiteDock 的 Web 服务端页面完成，小程序会自动同步，不能在这里修改。</text>
+  </view>
+
+  <view class="foot-space"></view>
+</view>

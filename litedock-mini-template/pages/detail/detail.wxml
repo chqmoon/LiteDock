@@ -1,0 +1,105 @@
+<view class="page detail-page">
+
+  <view wx:if="{{!found}}" class="state-card">
+    <text class="state-icon">!</text>
+    <text class="state-title">找不到这个容器</text>
+    <text class="state-desc">容器可能已被删除或重建，请返回面板下拉刷新后再试。</text>
+    <button class="btn btn-primary" bindtap="goBack">返回面板</button>
+  </view>
+
+  <block wx:else>
+    <!-- 概览：背景图 / 自定义图标同步 Web 端 cardBackgrounds 与 icons -->
+    <view class="card detail-overview {{card.hasBg ? 'has-bg' : ''}}">
+      <image wx:if="{{card.hasBg}}" class="detail-ov-bg" src="{{card.bgUrl}}" mode="aspectFill" style="filter:blur({{card.bgBlur}}px)" />
+      <view wx:if="{{card.hasBg}}" class="detail-ov-mask" style="background:rgba(10,16,34,{{card.bgMask}})"></view>
+      <view class="row">
+        <view class="ct-icon" style="background:{{card.iconBg}};color:{{card.iconColor}}">
+          <image wx:if="{{card.iconUrl}}" class="ct-icon-img {{card.iconIsCustom ? 'icon-custom' : ''}}" src="{{card.iconUrl}}" mode="{{card.iconIsCustom ? 'aspectFill' : 'aspectFit'}}" />
+          <text wx:else>{{card.iconText}}</text>
+        </view>
+        <view class="grow ct-meta">
+          <text class="ct-name">{{card.name}}</text>
+          <text class="ct-image">{{card.imageShort}}</text>
+        </view>
+        <view class="ct-state">
+          <view class="led" style="background:{{card.ledColor}}"></view>
+          <text>{{card.stateText}}</text>
+          <text wx:if="{{isSelf}}" class="self-flag">◆ 本体</text>
+        </view>
+      </view>
+      <view class="divider"></view>
+      <view class="kv"><text class="kv-k">运行状态</text><text class="kv-v">{{card.status}}</text></view>
+      <view class="kv"><text class="kv-k">容器 ID</text><text class="kv-v kv-mono">{{shortId}}</text></view>
+      <view class="kv"><text class="kv-k">镜像</text><text class="kv-v">{{image}}</text></view>
+      <view class="kv"><text class="kv-k">Compose 项目</text><text class="kv-v">{{projectText}}</text></view>
+      <view class="kv"><text class="kv-k">网络模式</text><text class="kv-v">{{networkText}}</text></view>
+    </view>
+
+    <!-- 资源占用 -->
+    <view class="card">
+      <text class="section-title">资源占用</text>
+      <view class="divider"></view>
+      <view class="meter-detail">
+        <view class="meter-label"><text>CPU</text><text class="strong">{{card.cpuText}}</text></view>
+        <view class="bar"><view class="bar-fill {{card.cpuWarn ? 'warn' : ''}}" style="width:{{card.cpuWidth}}"></view></view>
+      </view>
+      <view class="meter-detail">
+        <view class="meter-label"><text>内存</text><text class="strong">{{card.memText}}</text></view>
+        <view class="bar"><view class="bar-fill {{card.memWarn ? 'warn' : ''}}" style="width:{{card.memWidth}}"></view></view>
+      </view>
+      <text class="tiny">数据来自 LiteDock 后台采样，最多滞后 12 秒</text>
+    </view>
+
+    <!-- 端口 / 访问链接：反代连接下端口映射不显示，仅剩自定义链接时保留本卡 -->
+    <view wx:if="{{showPortCard}}" class="card">
+      <text class="section-title">端口与访问链接</text>
+      <view class="divider"></view>
+      <view class="chips">
+        <view class="chip port-chip" wx:for="{{card.chips}}" wx:for-item="chip" wx:key="url" bindtap="copyLink" data-url="{{chip.url}}">{{chip.label}}</view>
+        <text wx:if="{{!card.hasChips}}" class="no-port">{{card.noPortText}}</text>
+      </view>
+      <!-- 端口明细与上方可点击的链接重复，已精简；协议 / 监听 IP 对普通用户无意义 -->
+      <text class="tiny">点击访问链接可复制完整地址，用浏览器打开</text>
+    </view>
+
+    <!-- 容器操作 -->
+    <view class="card">
+      <text class="section-title">容器操作</text>
+      <view class="divider"></view>
+      <text wx:if="{{isSelf}}" class="tiny">◆ 这是 LiteDock 本体容器。停止/重启/暂停/升级重建已禁用——面板自己停掉会导致管理界面中断。如需操作请到 NAS 的容器管理界面中进行。</text>
+      <block wx:if="{{!isSelf}}">
+        <view class="op-grid">
+          <view wx:if="{{card.isRunning}}" class="op-cell"><button class="op" bindtap="doAction" data-act="stop">停止</button></view>
+          <view wx:if="{{card.isRunning}}" class="op-cell"><button class="op" bindtap="doAction" data-act="restart">重启</button></view>
+          <view wx:if="{{card.isRunning}}" class="op-cell"><button class="op" bindtap="doAction" data-act="pause">暂停</button></view>
+          <view wx:if="{{card.state === 'paused'}}" class="op-cell"><button class="op op-primary" bindtap="doAction" data-act="unpause">恢复</button></view>
+          <view wx:if="{{!card.isRunning && card.state !== 'paused'}}" class="op-cell"><button class="op op-primary" bindtap="doAction" data-act="start">启动</button></view>
+          <view wx:if="{{card.state === 'paused'}}" class="op-cell"><button class="op" bindtap="doAction" data-act="stop">停止</button></view>
+        </view>
+      </block>
+      <view class="op-grid">
+        <view class="op-cell"><button class="op" bindtap="checkUpdate">检查更新</button></view>
+        <view wx:if="{{!isSelf}}" class="op-cell"><button class="op op-danger" bindtap="doUpgrade">升级重建</button></view>
+      </view>
+      <text wx:if="{{updateText}}" class="tiny">{{updateText}}</text>
+    </view>
+
+    <!-- 日志 -->
+    <view class="card">
+      <view class="row-between">
+        <text class="section-title">运行日志</text>
+        <view class="log-ops">
+          <button class="btn btn-small btn-ghost{{logAuto ? ' on' : ''}}" bindtap="toggleLogAuto">{{logAuto ? '自动' : '手动'}}</button>
+          <button class="btn btn-small btn-ghost" bindtap="loadLogs">刷新</button>
+        </view>
+      </view>
+      <view class="divider"></view>
+      <view wx:if="{{logsLoading}}" class="log-box"><text class="tiny">正在读取日志…</text></view>
+      <scroll-view wx:elif="{{logs}}" scroll-y class="log-box">
+        <text class="log-text" selectable="true">{{logs}}</text>
+      </scroll-view>
+      <view wx:else class="log-box"><text class="tiny">点「刷新日志」读取最近 100 行</text></view>
+    </view>
+
+  </block>
+</view>

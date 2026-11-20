@@ -1,0 +1,40 @@
+# ===== 本地运维凭据与内部部署脚本（含个人 NAS 信息，绝不入库） =====
+.nas_env
+qnap_ssh.py
+deploy_web_*.py
+litedock/ContainerStation.yml
+litedock/ContainerStation-免构建版.yml
+
+# ===== 内部工作记录 / 开发日志（含个人环境细节） =====
+.workbuddy/
+litedock/操作教程.md
+litedock-app/使用说明.md
+
+# ===== 依赖与构建产物 =====
+node_modules/
+**/node_modules/
+litedock-app/android/build/
+litedock-app/android/.gradle/
+litedock-app/android/app/build/
+litedock-app/android/local.properties
+litedock-app/.gradle/
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== 发布包（请通过 GitHub Releases 下载，不进仓库） =====
+*.apk
+releases/*.zip
+releases/*.md5
+releases/*.apk
+
+# ===== 应用卡 / 临时副本目录（含本地绝对路径，绝不入库） =====
+*.genie
+mini-fresh-*/
+
+# ===== 预览截图与临时文件 =====
+litedock/预览截图*.png
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

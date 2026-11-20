@@ -1,0 +1,24 @@
+{
+  "mode": "tabs",
+  "syncMs": 3.93,
+  "syncSamples": [
+    3,
+    3.4,
+    5.4
+  ],
+  "renderMs": 3.87,
+  "renderSamples": [
+    3,
+    3.3,
+    5.3
+  ],
+  "imgsTotal": 26,
+  "imgsKept": 0,
+  "nodes": 796,
+  "groups": 2,
+  "cards": 25,
+  "htmlLen": 39444,
+  "tabReuse": 0,
+  "renders": 20,
+  "bodyScrollW": 390
+}

@@ -1,0 +1,23 @@
+{
+  "appId": "cn.starkc.litedock",
+  "appName": "LiteDock",
+  "webDir": "www",
+  "loggingBehavior": "none",
+  "android": {
+    "allowMixedContent": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": false
+    },
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "DARK",
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  "server": {
+    "androidScheme": "http"
+  }
+}

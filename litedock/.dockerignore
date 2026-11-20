@@ -1,0 +1,5 @@
+data/
+releases/
+.git/
+**/.git/
+**/__pycache__/

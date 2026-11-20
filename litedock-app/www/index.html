@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <title>LiteDock</title>
+  <link rel="stylesheet" href="css/litedock.css">
+  <link rel="stylesheet" href="css/shell.css">
+</head>
+<body>
+  <!-- 启动过渡页：约 1.4s 品牌动画。LD.start() 同时已经开始拉 /api/state，
+       动画结束时首屏数据通常已就绪，所以这层不会让「打开到能用」变慢。 -->
+  <div class="ld-splash" id="ld-splash">
+    <div class="ld-splash-inner">
+      <img class="ld-splash-logo" src="assets/logo.png" alt="LiteDock">
+      <div class="ld-splash-name">LiteDock</div>
+      <div class="ld-splash-tag">极简 Docker 容器管理面板</div>
+    </div>
+    <div class="ld-splash-bar"><i></i></div>
+    <div class="ld-splash-by">By Stark-C</div>
+  </div>
+
+  <div class="ld-root" id="ld-root">
+
+    <!-- 下拉刷新指示（对齐小程序 onPullDownRefresh） -->
+    <div class="ld-pull" id="ld-pull">下拉刷新</div>
+
+    <!-- 顶部导航：仅非 tab 页显示，替代小程序原生导航栏 -->
+    <div class="ld-navbar" id="ld-navbar">
+      <div class="ld-nav-back" id="ld-nav-back"><span>‹</span></div>
+      <div class="ld-nav-title" id="ld-nav-title">LiteDock</div>
+      <div class="ld-nav-right"></div>
+    </div>
+
+    <!-- 页面滚动容器 -->
+    <div class="ld-scroll" id="ld-scroll">
+      <div id="ld-page"></div>
+    </div>
+
+    <!-- 底部 tabBar：面板 / 设置 / 关于（对齐 app.json） -->
+    <div class="ld-tabbar" id="ld-tabbar">
+      <div class="ld-tab" data-tab="index"><img src="assets/tab/panel-active.png"><span>面板</span></div>
+      <div class="ld-tab" data-tab="settings"><img src="assets/tab/settings-normal.png"><span>设置</span></div>
+      <div class="ld-tab" data-tab="about"><img src="assets/tab/about-normal.png"><span>关于</span></div>
+    </div>
+
+    <!-- 全局弹层 -->
+    <div class="ld-toast" id="ld-toast"></div>
+    <div class="ld-loading" id="ld-loading"><div class="ld-loading-box"><div class="ld-spinner"></div><div class="ld-loading-text">请稍候</div></div></div>
+    <div class="ld-modal" id="ld-modal">
+      <div class="ld-modal-box">
+        <div class="ld-modal-title">提示</div>
+        <div class="ld-modal-content"></div>
+        <div class="ld-modal-btns">
+          <button class="ld-modal-cancel">取消</button>
+          <button class="ld-modal-ok">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/wx-shim.js"></script>
+  <script src="js/bundle.js"></script>
+  <script src="js/templates.js"></script>
+  <script>
+    (function () {
+      function hideSplash() {
+        var s = document.getElementById('ld-splash');
+        if (!s) return;
+        s.classList.add('hide');
+        setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 420);
+      }
+      function boot() {
+        try {
+          LD.start();               /* 首屏请求在此同步发出，与启动动画并行 */
+        } catch (err) {
+          document.getElementById('ld-page').innerHTML =
+            '<div class="page" style="padding:20px"><div class="card"><b>启动失败</b><br><span class="muted">' +
+            String(err && err.message || err) + '</span></div></div>';
+          console.error(err);
+        }
+        setTimeout(hideSplash, 1400);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+      else boot();
+    })();
+  </script>
+</body>
+</html>

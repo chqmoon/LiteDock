@@ -1,0 +1,36 @@
+{
+  "key": "tools",
+  "domNodes": 796,
+  "htmlLen": 39453,
+  "groups": 2,
+  "cards0": 25,
+  "perf": {
+    "renders": 5,
+    "lastMs": 3.3,
+    "maxMs": 16.8,
+    "totalMs": 34.4,
+    "batched": 0,
+    "imgPatches": 26,
+    "imgFlushes": 1,
+    "skipped": 1
+  },
+  "expandSyncMs": 4.9,
+  "expandFrameMs": 14.9,
+  "setDataPerExpand": 29,
+  "cards1": 27,
+  "collapseSyncMs": 3.5,
+  "collapseFrameMs": 32.6,
+  "setDataPerCollapse": 29,
+  "cards2": 25,
+  "perfAfter": {
+    "renders": 7,
+    "lastMs": 3,
+    "maxMs": 16.8,
+    "totalMs": 41.4,
+    "batched": 6,
+    "imgPatches": 78,
+    "imgFlushes": 1,
+    "skipped": 1
+  },
+  "bodyScrollW": 390
+}

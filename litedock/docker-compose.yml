@@ -1,0 +1,18 @@
+services:
+  litedock:
+    # Docker Hub 镜像（开箱即用）；本地从源码构建可改成 stark324/litedock:1.0.31 同 tag 后 push
+    image: stark324/litedock:1.0.31
+    container_name: litedock
+    ports:
+      - "23000:8000"
+    environment:
+      - ACCESS_PASSWORD=change-me # 必填：留空服务端拒绝启动（docker.sock≈root，禁止裸奔）
+      - LITEDOCK_PUBLIC_HOST=     # 可选：填 NAS 局域网 IP，启动日志会打印完整访问地址
+      - LITEDOCK_SELF_NAME=litedock  # 本体识别兜底，配合自我保护
+    volumes:
+      - ./data:/app/data         # 换成一个你自己的本地目录
+      - /var/run/docker.sock:/var/run/docker.sock
+    # 以 root 运行，便于读取 docker.sock 与写入挂载目录；若你的 NAS 用非 root 用户管理 Docker，
+    # 可改成对应用户，或加入 docker 组后去掉本行（需保证 /app/data 可写、docker.sock 可读）。
+    user: "0:0"
+    restart: unless-stopped

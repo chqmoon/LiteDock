@@ -1,0 +1,24 @@
+{
+  "name": "litedock-app",
+  "version": "1.0.6",
+  "private": true,
+  "description": "LiteDock Android client — an installable APK of the LiteDock Mini UI",
+  "author": "Stark-C",
+  "license": "UNLICENSED",
+  "scripts": {
+    "sync": "cap sync android",
+    "build:web": "python3 tools/build_css.py && python3 tools/build_bundle.py",
+    "android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "6.2.1",
+    "@capacitor/app": "6.0.2",
+    "@capacitor/clipboard": "6.0.2",
+    "@capacitor/core": "6.2.1",
+    "@capacitor/preferences": "6.0.3",
+    "@capacitor/status-bar": "6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "6.2.1"
+  }
+}

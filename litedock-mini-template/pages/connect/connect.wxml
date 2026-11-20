@@ -1,0 +1,101 @@
+<view class="page connect-page">
+
+  <!-- 已保存的连接 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="section-title">已保存的访问链接</text>
+      <button class="btn btn-small btn-primary" catchtap="openAdd">＋ 新增</button>
+    </view>
+    <view class="divider"></view>
+    <text class="field-hint">可存多台 NAS，或同一台的内网 / 公网两套地址；点一下即可切换。</text>
+
+    <view wx:if="{{connections.length === 0}}" class="empty-inline">
+      <text class="muted">还没有访问链接。填局域网地址，或你已做好的反向代理域名。</text>
+    </view>
+
+    <view wx:for="{{connections}}" wx:for-item="c" wx:key="id" class="conn-item">
+      <view class="row-between" catchtap="setActive" data-id="{{c.id}}">
+        <view class="grow">
+          <view class="row">
+            <text class="conn-name">{{c.name}}</text>
+            <text class="type-tag {{c.type === 'proxy' ? 'is-proxy' : ''}}">{{c.typeLabel}}</text>
+            <text wx:if="{{c.isActive}}" class="active-tag">使用中</text>
+          </view>
+          <text class="conn-url">{{c.url}}</text>
+          <text wx:if="{{c.note}}" class="conn-note">{{c.note}}</text>
+        </view>
+        <text class="conn-check">{{c.isActive ? '✓' : '›'}}</text>
+      </view>
+      <view class="conn-actions">
+        <view class="mini-cell"><button class="mini-btn" catchtap="openEdit" data-id="{{c.id}}">编辑</button></view>
+        <view class="mini-cell"><button class="mini-btn" catchtap="testSaved" data-id="{{c.id}}">测试</button></view>
+        <view class="mini-cell"><button class="mini-btn mini-danger" catchtap="removeConn" data-id="{{c.id}}">删除</button></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增 / 编辑表单：只要求一个访问链接 -->
+  <view wx:if="{{showForm}}" class="card">
+    <view class="row-between">
+      <text class="section-title">{{editingId ? '编辑访问链接' : '新增访问链接'}}</text>
+      <text class="form-close" catchtap="closeForm">×</text>
+    </view>
+    <view class="divider"></view>
+
+    <view class="field">
+      <text class="field-label">访问链接</text>
+      <input class="field-input" value="{{form.url}}" placeholder="http://192.168.1.100:23000" data-field="url" bindinput="onField" />
+      <text class="field-hint">局域网填 http://NAS地址:23000；外网填你已做好且可用的 HTTPS 反向代理。不写协议会自动补：IP 用 http，域名用 https。</text>
+    </view>
+
+    <view wx:if="{{linkType}}" class="detect-row">
+      <text class="detect-label">自动识别为</text>
+      <text class="detect-type">{{linkType}}</text>
+    </view>
+
+    <view class="field">
+      <text class="field-label">连接名称（可选）</text>
+      <input class="field-input" value="{{form.name}}" placeholder="留空自动用宿主机命名（如 NAS-01）" data-field="name" bindinput="onField" />
+    </view>
+
+    <view class="adv-toggle" catchtap="toggleAdvanced">
+      <text>高级选项</text>
+      <text>{{advanced ? '收起 −' : '展开 ＋'}}</text>
+    </view>
+
+    <block wx:if="{{advanced}}">
+      <view class="divider"></view>
+      <text class="field-hint">为反向代理准备：容器链接主机、Basic Auth 鉴权头、备注。直连 NAS 时全部留空即可。</text>
+      <view class="field">
+        <text class="field-label">容器链接主机（可选）</text>
+        <input class="field-input" value="{{form.host}}" placeholder="留空自动取访问链接里的主机" data-field="host" bindinput="onField" />
+        <text class="field-hint">容器的端口链接按 http://这个主机:端口 生成。反代场景下若服务仍走 NAS 内网 IP，在这里填 NAS 的 IP 或内网域名。</text>
+      </view>
+
+      <view class="field">
+        <text class="field-label">访问密码（可选）</text>
+        <input class="field-input" value="{{form.password}}" placeholder="部署时设了 ACCESS_PASSWORD 才需要" password="{{true}}" data-field="password" bindinput="onField" />
+        <text class="field-hint">若 LiteDock 服务端设了访问密码（ACCESS_PASSWORD），在这里填写；留空表示无密码。该密码会随每个 API 请求发送，与上面的反代鉴权头互不冲突。</text>
+      </view>
+
+      <view class="field">
+        <text class="field-label">鉴权请求头（可选）</text>
+        <input class="field-input" value="{{form.header}}" placeholder="Authorization: Basic xxxxxx" data-field="header" bindinput="onField" />
+        <text class="field-hint">反向代理若加了 Basic Auth / Token 鉴权，按「请求头名: 值」填写；留空表示无鉴权。所有 API 请求与连接测试都会带上它。</text>
+      </view>
+
+      <view class="field">
+        <text class="field-label">备注（可选）</text>
+        <input class="field-input" value="{{form.note}}" placeholder="给自己看的说明" data-field="note" bindinput="onField" />
+      </view>
+    </block>
+
+    <view class="btn-row form-actions">
+      <view class="btn-cell"><button class="btn btn-ghost" catchtap="testForm">测试连接</button></view>
+      <view class="btn-cell"><button class="btn btn-primary" catchtap="saveForm">保存并使用</button></view>
+    </view>
+    <text wx:if="{{testResult}}" class="test-result {{testOk ? 'ok' : 'fail'}}">{{testResult}}</text>
+  </view>
+
+  <view class="foot-space"></view>
+</view>

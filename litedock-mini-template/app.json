@@ -1,0 +1,46 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/settings/settings",
+    "pages/connect/connect",
+    "pages/about/about"
+  ],
+  "window": {
+    "navigationBarTitleText": "LiteDock",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f6fb",
+    "backgroundTextStyle": "light",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#969eaf",
+    "selectedColor": "#6c7cff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "面板",
+        "iconPath": "assets/tab/panel-normal.png",
+        "selectedIconPath": "assets/tab/panel-active.png"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置",
+        "iconPath": "assets/tab/settings-normal.png",
+        "selectedIconPath": "assets/tab/settings-active.png"
+      },
+      {
+        "pagePath": "pages/about/about",
+        "text": "关于",
+        "iconPath": "assets/tab/about-normal.png",
+        "selectedIconPath": "assets/tab/about-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

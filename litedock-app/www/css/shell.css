@@ -1,0 +1,429 @@
+/* LiteDock App — WebView 外壳
+   litedock.css 是小程序 WXSS 的 1:1 转换（rpx→vw）；本文件只补齐
+   「小程序原生能力」在 WebView 里需要自己实现的部分：tabBar / 导航栏 /
+   弹层 / 图片 mode / 滚动容器 / 表单元素重置。不改变任何页面视觉。 */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
+  overscroll-behavior: none;
+}
+.ld-root {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f4f6fb;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* 小程序 button 默认块级撑满；网页 button 默认 inline-block 会收缩。
+   未放进 .btn-cell / .op-cell / .mini-cell 的按钮都需要补这条，否则会被挤窄。 */
+button {
+  display: block;
+  width: 100%;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-small, .mini-btn { width: auto; display: inline-block; }
+input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  -webkit-user-select: text; user-select: text;
+  -webkit-appearance: none;
+  appearance: none;
+}
+button:active { opacity: .82; }
+
+/* <image mode="aspectFill"> → object-fit:cover；aspectFit → contain */
+.page-bg, .hero-bg, .group-bg, .ct-bg, .detail-ov-bg,
+.welcome-mark, .brand-mark {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+/* 小程序用 left:-24rpx + width:calc(100%+48rpx) 让模糊图外扩一圈。
+   网页里 fixed 元素负 left 会把 body 的 scrollWidth 撑大（实测 512→887），
+   改为贴边 + transform:scale 等价实现，且不产生横向滚动。 */
+.page-bg {
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: scale(1.06);
+  transform-origin: center;
+}
+.welcome-mark, .brand-mark { width: auto; height: auto; }
+.ct-icon-img { display: block; object-fit: contain; }
+/* 自定义上传图标铺满图标位（对齐 Web）；内置匹配图标保留 contain 不裁切 */
+.ct-icon-img.icon-custom { object-fit: cover; }
+.log-text { white-space: pre-wrap; word-break: break-all; }
+.log-box { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.search-ph::placeholder, input::placeholder { color: #b0b7c6; }
+
+/* ---------------- 滚动容器 ---------------- */
+.ld-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(13.333vw + env(safe-area-inset-bottom, 0px));
+  position: relative;
+}
+
+/* ---------------- 顶部导航栏（详情页 / 连接页） ---------------- */
+.ld-navbar {
+  display: none;
+  flex: 0 0 auto;
+  height: 12.8vw;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, .05);
+  position: relative;
+  z-index: 20;
+}
+.ld-navbar.show { display: flex; }
+.ld-nav-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1f2430;
+  max-width: 62%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ld-nav-back {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 56px;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  font-size: 34px;
+  line-height: 1;
+  color: #1f2430;
+}
+.ld-nav-back span { margin-top: -3px; }
+
+/* ---------------- 底部 tabBar ---------------- */
+.ld-tabbar {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 30;
+  display: flex;
+  background: #ffffff;
+  border-top: 1px solid #eef1f7;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -2px 16px rgba(36, 50, 90, .05);
+}
+.ld-tabbar.hide { display: none; }
+.ld-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 13.333vw;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #969eaf;
+  font-size: 10px;
+  line-height: 1.2;
+  gap: 2px;
+}
+.ld-tab img { width: 24px; height: 24px; object-fit: contain; }
+.ld-tab.on { color: #6c7cff; }
+
+/* ---------------- 下拉刷新指示 ---------------- */
+.ld-pull {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  z-index: 15;
+  text-align: center;
+  font-size: 12px;
+  color: #8b93a5;
+  padding: 10px 0;
+  background: rgba(244, 246, 251, .96);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+}
+.ld-pull.show { opacity: 1; transform: translateY(0); position: relative; }
+
+/* ---------------- Toast ---------------- */
+.ld-toast {
+  position: fixed;
+  left: 50%; bottom: 22%;
+  transform: translate(-50%, 8px);
+  z-index: 9000;
+  max-width: 78%;
+  padding: 11px 18px;
+  border-radius: 10px;
+  background: rgba(28, 34, 50, .92);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .2);
+}
+.ld-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.ld-toast.ok { background: rgba(23, 132, 95, .94); }
+
+/* 1.0.9：长按复制的无声反馈。Android 系统/ROM 在应用写入剪贴板时会自己弹
+   「已复制。」提示，APP 不再弹第二个「已复制」toast；只让被长按的链接 chip
+   闪一下绿色描边，用 animationend 自动清除，全程无悬挂定时器。 */
+@keyframes ld-link-copied-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(23, 132, 95, 0); }
+  18%  { box-shadow: 0 0 0 3px rgba(23, 132, 95, .9); }
+  100% { box-shadow: 0 0 0 3px rgba(23, 132, 95, 0); }
+}
+[data-ev="copyLink"].ld-link-copied {
+  animation: ld-link-copied-flash .85s ease-out 1;
+}
+
+/* ---------------- Loading ---------------- */
+.ld-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 16, 34, .18);
+}
+.ld-loading.show { display: flex; }
+.ld-loading-box {
+  min-width: 110px;
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: rgba(28, 34, 50, .92);
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+.ld-spinner {
+  width: 26px; height: 26px;
+  margin: 0 auto 10px;
+  border: 3px solid rgba(255, 255, 255, .25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ld-spin .8s linear infinite;
+}
+@keyframes ld-spin { to { transform: rotate(360deg); } }
+
+/* ---------------- Modal ---------------- */
+.ld-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 16, 34, .42);
+  padding: 28px;
+}
+.ld-modal.show { display: flex; }
+.ld-modal-box {
+  width: 100%;
+  max-width: 320px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 50px rgba(10, 16, 34, .24);
+}
+.ld-modal-title { padding: 20px 22px 6px; font-size: 17px; font-weight: 700; color: #1f2430; text-align: center; }
+.ld-modal-content { padding: 8px 22px 22px; font-size: 14px; line-height: 1.7; color: #5a6480; text-align: center; white-space: pre-wrap; word-break: break-all; }
+.ld-modal-btns { display: flex; border-top: 1px solid #eef1f7; }
+.ld-modal-btns button {
+  flex: 1 1 0;
+  min-height: 48px;
+  background: #fff;
+  color: #4a5468;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+}
+.ld-modal-btns .ld-modal-ok { color: #6c7cff; border-left: 1px solid #eef1f7; }
+.ld-modal-btns .ld-modal-cancel[style*="display: none"] + .ld-modal-ok { border-left: none; }
+
+/* ---------- 启动过渡页（1.0.1） ---------- */
+.ld-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: radial-gradient(125% 95% at 28% 8%, #245fbf 0%, #103c8f 46%, #061b4a 100%);
+  transition: opacity .38s ease, transform .38s ease;
+  will-change: opacity, transform;
+  -webkit-tap-highlight-color: transparent;
+}
+.ld-splash.hide { opacity: 0; transform: scale(1.04); pointer-events: none; }
+.ld-splash-inner { display: flex; flex-direction: column; align-items: center; transform: translateY(-6%); }
+.ld-splash-logo {
+  width: 96px;
+  height: 96px;
+  border-radius: 22px;
+  box-shadow: 0 16px 44px rgba(2, 17, 55, .34);
+  animation: ldSplashPop .58s cubic-bezier(.16, 1, .3, 1) both;
+}
+.ld-splash-name {
+  margin-top: 20px;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-shadow: 0 2px 12px rgba(2, 17, 55, .18);
+  animation: ldSplashUp .5s .16s cubic-bezier(.16, 1, .3, 1) both;
+}
+.ld-splash-tag {
+  margin-top: 10px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, .84);
+  animation: ldSplashUp .5s .3s cubic-bezier(.16, 1, .3, 1) both;
+}
+.ld-splash-bar {
+  position: absolute;
+  bottom: 76px;
+  width: 112px;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .22);
+  overflow: hidden;
+}
+.ld-splash-bar i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 3px;
+  background: #fff;
+  animation: ldSplashBar 1.34s cubic-bezier(.4, 0, .2, 1) forwards;
+}
+.ld-splash-by {
+  position: absolute;
+  bottom: 34px;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  color: rgba(255, 255, 255, .74);
+  animation: ldSplashUp .5s .45s ease both;
+}
+@keyframes ldSplashPop {
+  from { opacity: 0; transform: scale(.78) translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ldSplashUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ldSplashBar { from { width: 0; } to { width: 100%; } }
+
+/* ---- 1.0.2 设置页：当前连接 + 浏览器选择开关 ---- */
+.conn-summary { padding: 2px 0 14px; }
+.conn-summary-name {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 17px; font-weight: 600; color: #20263a;
+}
+.conn-summary-name .type-tag { font-size: 11px; font-weight: 400; }
+.conn-summary-url {
+  margin-top: 7px; font-size: 13px; color: #5c6580; word-break: break-all;
+}
+.conn-summary-state { margin-top: 9px; font-size: 12px; color: #8a93a8; }
+.conn-summary-state.is-ok { color: #22a06b; }
+.switch-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 12px; padding: 12px 14px; background: #f5f7fc; border-radius: 12px;
+  font-size: 14px; color: #20263a; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ld-switch {
+  flex: 0 0 44px; height: 26px; border-radius: 13px;
+  background: #cbd3e3; position: relative; transition: background .2s;
+}
+.ld-switch i {
+  position: absolute; left: 3px; top: 3px; width: 20px; height: 20px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.18);
+  transition: transform .2s;
+}
+.ld-switch.on { background: #6d7cff; }
+.ld-switch.on i { transform: translateX(18px); }
+.switch-hint { display: block; margin-top: 12px; line-height: 1.65; }
+
+/* ===== 1.0.11 紧凑模式（挂在 #ld-root.ld-compact 上）=====
+   与 Web 端 .compact 规则一一对应。单位沿用基础样式的 vw 坐标系
+   （litedock.css 全部是 vw；不混入 vh，避免宽高基准不一致）：
+     Web .compact .ct{padding:9px 11px}（常规 14px→9px，比例 .81）
+              → APP 常规 3.2vw → 紧凑 2.6vw（430 宽下 ≈9px/11px）
+     Web .compact .ct-icon{34px}（常规 42px，比例 .74）
+              → APP 常规 11.7333vw → 紧凑 8.6667vw（≈34px/38px 同比例）
+     Web .compact .ct-status/.meter/.ct-ports 隐藏 → .ct-status/.meters/.ports 隐藏
+     Web .compact .ct-ops{margin-top:8px} → APP 常规 0.5333vw → 紧凑 2.6667vw
+   差异说明（APP 卡片结构与 Web 不同，等价对齐）：
+     · APP 的快捷访问区类名是 .ports（Web 是 .ct-ports），容器/项目卡共用，规则一致；
+     · APP 项目卡（.ct-project）的展开/收起按钮是 .op-full 直挂卡片，不是 .ct-ops，
+       同样补 margin-top 保持与容器卡按钮行相同的下沉量；
+     · .ct-icon-img 跟随 .ct-icon 缩小；.ct-state（LED+状态文字）保留，显示运行状态。 */
+.ld-root.ld-compact .scope-index .ct { padding: 2.6vw 2.8vw; }
+.ld-root.ld-compact .scope-index .ct-icon {
+  width: 8.6667vw; height: 8.6667vw; flex-basis: 8.6667vw; border-radius: 2.2vw;
+}
+.ld-root.ld-compact .scope-index .ct-icon-img { width: 8.6667vw; height: 8.6667vw; }
+.ld-root.ld-compact .scope-index .ct-status,
+.ld-root.ld-compact .scope-index .meters,
+.ld-root.ld-compact .scope-index .ports { display: none; }
+.ld-root.ld-compact .scope-index .ct-ops { margin-top: 2.6667vw; }
+/* 1.0.17：紧凑模式同值（原 2.6667vw 比新常规值还大，删掉避免倒挂；
+   间距统一由 .ct-project .op-full 1.8667vw 提供） */
+.ld-root.ld-compact .scope-index .ct-project .op-full { display: block; margin-top: 1.8667vw; }
+
+/* ===== 1.0.14 项目卡异常容器警告（追加在 litedock.css 之后，特异性更高）=====
+   项目卡状态行取 Up 最久容器；若项目内有没启动/unhealthy 的容器，
+   整行转橙色并追加 ⚠N个容器异常 chip，与 Web 端 .status-warn 对齐。 */
+.ct-status.status-warn { color: #c8791c; font-weight: 500; }
+.status-warn-tag {
+  display: inline-block; margin-left: 7px; padding: 1px 6px; border-radius: 7px;
+  background: rgba(240, 170, 60, .18); color: #a6700d; font-size: 10px; font-weight: 600;
+}
+.ct.has-bg .status-warn-tag { background: rgba(255, 240, 215, .9); color: #a6700d; }
+
+/* ===== 1.0.15 项目批量启停按钮 + 升级备份管理（vw 坐标系，与基础样式一致）===== */
+.project-ops { margin-top: 1.6vw; }
+.project-ops .op-cell { padding: 0.8vw 1vw; }
+.project-ops .op { font-size: 3.1vw; padding: 1.6vw 0.6vw; }
+/* 1.0.17：项目卡「展开/收起」与上方批量操作行拉开间距（用户反馈"太贴近"）。
+   基础规则在 litedock.css（源 index.wxss .ct-project .op-full margin-top:14rpx），
+   这里兜底同值 1.8667vw（build_css rpx→vw 口径 750rpx=100vw，14rpx=1.8667vw）。 */
+.ct-project .op-full { margin-top: 1.8667vw; }
+.bk-list { display: flex; flex-direction: column; gap: 2.4vw; margin-top: 2.2vw; }
+.bk-item {
+  border: 1px solid var(--line-2, rgba(120,132,165,.2)); border-radius: 2.6vw;
+  padding: 2.8vw; background: rgba(255,255,255,.55);
+}
+.bk-line { display: flex; align-items: center; gap: 1.6vw; flex-wrap: wrap; }
+.bk-name { font-size: 3.4vw; font-weight: 500; color: var(--ink, #1a2340); }
+.bk-kind {
+  font-size: 2.6vw; padding: 0.5vw 1.6vw; border-radius: 1.8vw;
+  background: rgba(230,168,32,.16); color: #a6700d;
+}
+.bk-kind.newer { background: rgba(92,124,255,.16); color: #4a63c8; }
+.bk-sub { font-size: 2.9vw; color: var(--ink-3, #8b93a5); margin-top: 0.8vw; word-break: break-all; }
+.bk-actions { display: flex; gap: 1.4vw; margin-top: 2vw; }
+.bk-actions .op { font-size: 3vw; }

@@ -1,0 +1,230 @@
+<view class="page index-page {{vm.wallpaperUrl ? 'has-wall' : ''}}">
+
+  <!-- 整页壁纸：同步 Web 的 wall-layer + wall-mask（深色遮罩，壁纸清晰可见）；无壁纸时不渲染，保持原浅色底 -->
+  <!-- page-bg-base：深色兜底底，壁纸图加载出来前/失败时也是深底（像浏览器），不会突兀发灰 -->
+  <view wx:if="{{vm.wallpaperUrl}}" class="page-bg-base"></view>
+  <image wx:if="{{vm.wallpaperUrl}}" class="page-bg" src="{{vm.wallpaperUrl}}" mode="aspectFill" style="filter:blur({{vm.wallpaperBlur}}px)" />
+  <view wx:if="{{vm.wallpaperUrl}}" class="page-bg-mask" style="background:linear-gradient(160deg,rgba(8,14,30,.34),rgba(10,16,34,.06) 45%,rgba(8,14,30,.4)),rgba(8,12,26,{{vm.wallpaperMask}})" />
+
+  <view class="content">
+  <!-- 未填写访问链接：空白引导态，不显示任何容器数据 -->
+  <view wx:if="{{viewState === 'blank'}}" class="welcome">
+    <image class="welcome-mark" src="/assets/logo.png" mode="aspectFill" />
+    <text class="welcome-title">还没有连接 LiteDock</text>
+    <text class="welcome-desc">填入 NAS 的访问链接，就能看到容器、分组和运行状态。</text>
+    <view class="welcome-eg">
+      <view class="welcome-eg-row">
+        <text class="welcome-eg-k">局域网</text>
+        <text class="welcome-eg-v">http://192.168.1.100:23000</text>
+      </view>
+      <view class="welcome-eg-row">
+        <text class="welcome-eg-k">外网 / 反代</text>
+        <text class="welcome-eg-v">https://nas.example.com</text>
+      </view>
+    </view>
+    <button class="btn btn-primary welcome-btn" catchtap="addLink">填写访问链接</button>
+  </view>
+
+  <block wx:else>
+    <!-- 顶部概览：标题 / 副标题 / 背景图全部同步 Web 端 config.json -->
+    <view class="hero {{vm.heroBgUrl ? 'hero-has-bg' : ''}}">
+      <image wx:if="{{vm.heroBgUrl}}" class="hero-bg" src="{{vm.heroBgUrl}}" mode="aspectFill" style="filter:blur({{vm.heroBlur}}px)" />
+      <view wx:if="{{vm.heroBgUrl}}" class="hero-mask"></view>
+      <view class="hero-inner">
+        <view class="row-between">
+          <view class="grow">
+            <text class="hero-title">{{vm.title}}</text>
+            <text class="hero-sub">{{vm.subtitle}}</text>
+          </view>
+          <view class="conn-badge" bindtap="goConnect">
+            <view class="led" style="background:{{connColor}}"></view>
+            <text>{{connName}}</text>
+            <text class="conn-arrow">›</text>
+          </view>
+        </view>
+        <view class="stat-panel">
+          <view class="stat">
+            <text class="stat-label"><text class="stat-dot s-green"></text>运行中</text>
+            <text class="stat-num">{{vm.running}}</text>
+          </view>
+          <view class="stat">
+            <text class="stat-label"><text class="stat-dot s-indigo"></text>容器总数</text>
+            <text class="stat-num">{{vm.total}}</text>
+          </view>
+          <view class="stat">
+            <text class="stat-label"><text class="stat-dot s-teal"></text>分组</text>
+            <text class="stat-num">{{vm.groupCount}}</text>
+          </view>
+          <view class="stat">
+            <text class="stat-label"><text class="stat-dot s-slate"></text>宿主机</text>
+            <text class="stat-num stat-num-sm">{{vm.hostName}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 搜索 -->
+    <view class="search-bar">
+      <text class="search-icon">⌕</text>
+      <input class="search-input" value="{{query}}" placeholder="搜索容器 / 镜像 / 项目" placeholder-class="search-ph" confirm-type="search" bindinput="onSearch" />
+      <text wx:if="{{query}}" class="search-clear" catchtap="clearSearch">×</text>
+    </view>
+
+    <!-- 三态 -->
+    <view wx:if="{{viewState === 'loading'}}" class="state-card">
+      <text class="state-icon">◌</text>
+      <text class="state-title">正在连接 NAS</text>
+      <text class="state-desc">读取容器列表与外观配置…</text>
+    </view>
+
+    <view wx:elif="{{viewState === 'error'}}" class="state-card">
+      <text class="state-icon">!</text>
+      <text class="state-title">连接失败</text>
+      <text class="state-desc">{{errorMsg}}</text>
+      <button class="btn btn-primary" catchtap="handleRetry">重新加载</button>
+      <view class="state-gap"></view>
+      <button class="btn btn-ghost" catchtap="goConnect">检查访问链接</button>
+    </view>
+
+    <view wx:elif="{{viewState === 'empty'}}" class="state-card">
+      <text class="state-icon">○</text>
+      <text class="state-title">{{emptyTitle}}</text>
+      <text class="state-desc">{{emptyDesc}}</text>
+      <button wx:if="{{emptyAction === 'clear'}}" class="btn btn-ghost" catchtap="clearSearch">清空搜索</button>
+    </view>
+
+    <!-- 分组 + 卡片；分组背景图 / 遮罩同步 Web 端的 groups[k] -->
+    <block wx:else>
+      <view class="group {{g.visualBg ? 'has-bg' : ''}}" wx:for="{{vm.groups}}" wx:for-item="g" wx:key="key">
+        <image wx:if="{{g.hasBg}}" class="group-bg" src="{{g.bgUrl}}" mode="aspectFill" style="filter:blur({{g.bgBlur}}px)" />
+        <view wx:elif="{{g.autoBg}}" class="group-bg group-auto-bg" style="background:{{g.autoBg}}"></view>
+        <view wx:if="{{g.visualBg}}" class="group-mask" style="background:rgba(10,16,34,{{g.bgMask}})"></view>
+        <view class="group-inner">
+          <view class="group-head" catchtap="toggleGroup" data-key="{{g.key}}">
+            <view class="group-bar" style="background:{{g.autoBar || g.accent}}"></view>
+            <view class="grow">
+              <text class="group-title">{{g.label}}</text>
+              <text class="group-sub">{{g.count}} 个容器 · {{g.running}} 运行中</text>
+            </view>
+            <text wx:if="{{g.canFold}}" class="group-toggle {{g.collapsed ? 'is-on' : ''}}">{{g.toggleText}}</text>
+          </view>
+
+          <view wx:if="{{g.collapsed}}" class="group-folded">{{g.hint}}</view>
+
+          <block wx:else>
+            <view wx:for="{{g.cards}}" wx:for-item="card" wx:key="key">
+
+              <!-- 普通容器卡；卡片背景图 / 遮罩同步 Web 端的 cardBackgrounds -->
+              <view wx:if="{{card.isContainer}}" class="ct {{card.hasBg ? 'has-bg' : ''}}" bindtap="openDetail" data-id="{{card.id}}">
+                <image wx:if="{{card.hasBg}}" class="ct-bg" src="{{card.bgUrl}}" mode="aspectFill" style="filter:blur({{card.bgBlur}}px)" />
+                <view wx:if="{{card.hasBg}}" class="ct-mask" style="background:rgba(10,16,34,{{card.bgMask}})"></view>
+                <view class="ct-top">
+                  <view class="ct-icon" style="background:{{card.iconBg}};color:{{card.iconColor}}">
+                    <image wx:if="{{card.iconUrl}}" class="ct-icon-img {{card.iconIsCustom ? 'icon-custom' : ''}}" src="{{card.iconUrl}}" mode="{{card.iconIsCustom ? 'aspectFill' : 'aspectFit'}}" />
+                    <text wx:else>{{card.iconText}}</text>
+                  </view>
+                  <view class="grow ct-meta">
+                    <text class="ct-name">{{card.name}}</text>
+                    <text class="ct-image">{{card.imageShort}}</text>
+                  </view>
+                  <view class="ct-state">
+                    <view class="led" style="background:{{card.ledColor}}"></view>
+                    <text>{{card.stateText}}</text>
+                    <text wx:if="{{card.isSelf}}" class="self-flag">◆ 本体</text>
+                  </view>
+                </view>
+
+                <text class="ct-status">{{card.status}}</text>
+
+                <view class="meters">
+                  <view class="meter">
+                    <view class="meter-label"><text>CPU</text><text class="strong">{{card.cpuText}}</text></view>
+                    <view class="bar"><view class="bar-fill {{card.cpuWarn ? 'warn' : ''}}" style="width:{{card.cpuWidth}}"></view></view>
+                  </view>
+                  <view class="meter">
+                    <view class="meter-label"><text>内存</text><text class="strong">{{card.memText}}</text></view>
+                    <view class="bar"><view class="bar-fill {{card.memWarn ? 'warn' : ''}}" style="width:{{card.memWidth}}"></view></view>
+                  </view>
+                </view>
+
+                <!-- 反代连接时不显示端口映射，只保留自定义链接；一条都没有就整块隐藏 -->
+                <view wx:if="{{card.portsVisible}}" class="ports">
+                  <text class="ports-label">访问链接</text>
+                  <view class="chips">
+                    <view class="chip port-chip" wx:for="{{card.chips}}" wx:for-item="chip" wx:key="url" catchtap="copyLink" data-url="{{chip.url}}">{{chip.label}}</view>
+                    <text wx:if="{{!card.hasChips}}" class="no-port">{{card.noPortText}}</text>
+                  </view>
+                </view>
+
+                <view class="ct-ops">
+                  <block wx:if="{{card.isSelf}}">
+                    <view class="op-cell"><text class="op op-disabled self-tip">本体受保护</text></view>
+                    <view class="op-cell"><button class="op" catchtap="openLogs" data-id="{{card.id}}">日志</button></view>
+                    <view class="op-cell"><button class="op" catchtap="openDetail" data-id="{{card.id}}">详情</button></view>
+                  </block>
+                  <block wx:else>
+                    <view class="op-cell"><button class="op {{card.primary.style === 'primary' ? 'op-primary' : ''}}" catchtap="doAction" data-id="{{card.id}}" data-act="{{card.primary.key}}" data-name="{{card.name}}">{{card.primary.label}}</button></view>
+                    <view class="op-cell"><button class="op" catchtap="openLogs" data-id="{{card.id}}">日志</button></view>
+                    <view class="op-cell"><button class="op" catchtap="openDetail" data-id="{{card.id}}">详情</button></view>
+                  </block>
+                </view>
+              </view>
+
+              <!-- Compose 项目卡（多容器项目合并） -->
+              <view wx:else class="ct ct-project">
+                <view class="ct-top">
+                  <view class="ct-icon" style="background:{{card.iconBg}};color:{{card.iconColor}}">
+                    <image wx:if="{{card.iconUrl}}" class="ct-icon-img {{card.iconIsCustom ? 'icon-custom' : ''}}" src="{{card.iconUrl}}" mode="{{card.iconIsCustom ? 'aspectFill' : 'aspectFit'}}" />
+                    <text wx:else>{{card.iconText}}</text>
+                  </view>
+                  <view class="grow ct-meta">
+                    <text class="ct-name">{{card.name}}</text>
+                    <text class="ct-image">Compose 项目 · {{card.count}} 个容器</text>
+                  </view>
+                  <view class="ct-state">
+                    <view class="led" style="background:{{card.stateColor}}"></view>
+                    <text>{{card.runningText}}</text>
+                  </view>
+                </view>
+                <!-- 项目卡状态行，与 Web/APP 同源：Up 最久容器 + 异常容器警告 + 额外端口提示 -->
+                <text wx:if="{{card.statusText || card.statusWarn || card.extraChips}}" class="ct-status {{card.statusWarn ? 'status-warn' : ''}}">{{card.statusText}}<text wx:if="{{card.statusWarn}}" class="status-warn-tag">⚠ {{card.statusIssues}} 个容器异常</text>{{card.extraChips}}</text>
+                <!-- 项目卡资源条：与单容器卡同款两条 meter（数据由 model 算好） -->
+                <view class="meters">
+                  <view class="meter">
+                    <view class="meter-label"><text>CPU</text><text class="strong">{{card.cpuText}}</text></view>
+                    <view class="bar"><view class="bar-fill {{card.cpuWarn ? 'warn' : ''}}" style="width:{{card.cpuWidth}}"></view></view>
+                  </view>
+                  <view class="meter">
+                    <view class="meter-label"><text>内存</text><text class="strong">{{card.memText}}</text></view>
+                    <view class="bar"><view class="bar-fill {{card.memWarn ? 'warn' : ''}}" style="width:{{card.memWidth}}"></view></view>
+                  </view>
+                </view>
+                <view wx:if="{{card.portsVisible}}" class="ports">
+                  <text class="ports-label">访问链接</text>
+                  <view class="chips">
+                    <view class="chip port-chip" wx:for="{{card.chips}}" wx:for-item="chip" wx:key="url" catchtap="copyLink" data-url="{{chip.url}}">{{chip.label}}</view>
+                    <text wx:if="{{!card.hasChips}}" class="no-port">无对外端口</text>
+                  </view>
+                </view>
+                <!-- 项目整体启停：后端按 depends_on 拓扑排序，与 Web/APP 一致 -->
+                <view class="op-grid project-ops">
+                  <view class="op-cell"><button class="op" catchtap="projectAction" data-act="start" data-proj="{{card.project}}">启动</button></view>
+                  <view class="op-cell"><button class="op" catchtap="projectAction" data-act="stop" data-proj="{{card.project}}">停止</button></view>
+                  <view class="op-cell"><button class="op" catchtap="projectAction" data-act="restart" data-proj="{{card.project}}">重启</button></view>
+                </view>
+                <button class="op op-primary op-full" catchtap="toggleProject" data-key="{{card.groupKey}}" data-project="{{card.project}}">{{card.toggleLabel}}</button>
+              </view>
+
+            </view>
+            <view wx:if="{{g.cards.length === 0}}" class="group-folded">这个分组还没有容器</view>
+          </block>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{viewState === 'ready'}}" class="foot-note">
+      <text>LiteDock Mini · 下拉刷新</text>
+    </view>
+  </block>
+  </view>
+</view>

@@ -1,0 +1,333 @@
+.index-page { padding-top: 20rpx; }
+
+/* 顶部概览：Web 端浅色毛玻璃 + 深色文字，任何壁纸下统计卡片都保持白底高对比 */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #eef1ff 0%, #f3f0ff 48%, #e9f8f4 100%);
+  border: 1rpx solid rgba(255, 255, 255, .9);
+  box-shadow: 0 10rpx 34rpx rgba(18, 28, 58, .08);
+  margin-bottom: 20rpx;
+}
+.hero-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: .22; transform: scale(1.06); }
+.hero-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, .58); }
+.hero-inner { position: relative; z-index: 1; padding: 28rpx; }
+.hero-title { display: block; font-size: 40rpx; font-weight: 700; letter-spacing: 1rpx; color: #20263a; }
+.hero-sub { display: block; font-size: 24rpx; color: #5c6580; margin-top: 6rpx; }
+
+.conn-badge {
+  display: flex;
+  align-items: center;
+  min-height: 60rpx;
+  padding: 0 18rpx;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, .92);
+  border: 1rpx solid rgba(30, 40, 70, .08);
+  font-size: 23rpx;
+  color: #3f4859;
+  max-width: 260rpx;
+}
+.conn-badge text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.conn-arrow { margin-left: 8rpx; color: #8992a8; font-size: 28rpx; }
+
+/* 2×2 白色统计卡：数字深色加粗、标签中灰，圆点只做点缀，不依赖背景色 */
+.stat-panel { display: flex; flex-wrap: wrap; margin: 26rpx -6rpx 0; }
+.stat {
+  flex: 0 0 calc(50% - 12rpx);
+  box-sizing: border-box;
+  margin: 6rpx;
+  padding: 18rpx 20rpx 20rpx;
+  background: rgba(255, 255, 255, .94);
+  border: 1rpx solid rgba(30, 40, 70, .07);
+  border-radius: 18rpx;
+  box-shadow: 0 4rpx 16rpx rgba(36, 50, 90, .06);
+  min-width: 0;
+}
+.stat-label { display: flex; align-items: center; font-size: 23rpx; font-weight: 600; color: #5c6580; }
+.stat-dot { width: 12rpx; height: 12rpx; border-radius: 50%; display: inline-block; margin-right: 10rpx; flex: 0 0 12rpx; }
+.s-green { background: #25c07a; }
+.s-indigo { background: #7c8cff; }
+.s-teal { background: #32b6a8; }
+.s-slate { background: #9aa3b8; }
+.stat-num {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #20263a;
+  line-height: 1.3;
+  margin-top: 6rpx;
+}
+.stat-num-sm {
+  font-size: 25rpx;
+  line-height: 1.8;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 0 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 6rpx 22rpx rgba(36, 50, 90, .05);
+}
+.search-icon { font-size: 38rpx; color: #9aa3b2; margin-right: 14rpx; }
+.search-input { flex: 1; min-width: 0; font-size: 27rpx; color: #1f2430; height: 88rpx; }
+.search-ph { color: #b0b7c6; }
+.search-clear { font-size: 40rpx; color: #a3aab9; padding: 0 8rpx 0 20rpx; }
+
+/* 未连接时的空白引导 */
+.welcome {
+  margin-top: 100rpx;
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 64rpx 40rpx 52rpx;
+  text-align: center;
+  box-shadow: 0 8rpx 30rpx rgba(36, 50, 90, .06);
+}
+.welcome-mark {
+  display: block;
+  width: 120rpx;
+  height: 120rpx;
+  margin: 0 auto 28rpx;
+  border-radius: 22%;
+  box-shadow: 0 12rpx 26rpx rgba(20, 96, 226, .22);
+}
+.welcome-title { display: block; font-size: 34rpx; font-weight: 700; color: #232a42; }
+.welcome-desc { display: block; font-size: 25rpx; color: #8b93a5; line-height: 1.7; margin: 16rpx 0 32rpx; }
+.welcome-eg { background: #f6f8fc; border-radius: 18rpx; padding: 20rpx 24rpx; margin-bottom: 36rpx; text-align: left; }
+.welcome-eg-row { display: flex; align-items: center; padding: 8rpx 0; }
+.welcome-eg-k { width: 160rpx; flex: 0 0 160rpx; font-size: 23rpx; color: #6b7385; font-weight: 600; }
+.welcome-eg-v { flex: 1; min-width: 0; font-size: 22rpx; color: #4a5b8c; word-break: break-all; }
+.welcome-btn { margin-bottom: 8rpx; }
+
+.state-gap { height: 24rpx; }
+
+.group { position: relative; border-radius: 24rpx; margin-bottom: 20rpx; overflow: hidden; }
+.group-head { display: flex; align-items: center; min-height: 88rpx; padding: 8rpx 4rpx; }
+.group-bar { width: 8rpx; height: 44rpx; border-radius: 4rpx; margin-right: 18rpx; }
+.group-title { display: block; font-size: 31rpx; font-weight: 700; color: #232a42; }
+.group-sub { display: block; font-size: 23rpx; color: #8b93a5; margin-top: 4rpx; }
+.group-toggle {
+  min-height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 22rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  border: 1rpx solid #e5e9f2;
+  color: #4a5468;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+.group-toggle.is-on { background: #e9edff; border-color: #c9d1ff; color: #4b5bd0; }
+.group-folded {
+  margin: 0 4rpx 16rpx;
+  padding: 26rpx 24rpx;
+  border: 1rpx dashed #d9dfec;
+  border-radius: 18rpx;
+  font-size: 24rpx;
+  color: #9aa3b2;
+  line-height: 1.6;
+}
+
+.ct {
+  position: relative;
+  overflow: hidden;
+  /* 1.0.18：无背景卡片改半透明玻璃，与 Web .ct{background:var(--glass-strong)} 同款
+     （cardOpacity .68 + .18 = rgba(255,255,255,.86)）。旧值纯白 #ffffff 贴在分组
+     渐变上像一块死白贴纸，Web 端无此问题。 */
+  background: rgba(255, 255, 255, .86);
+  border-radius: 24rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(36, 50, 90, .06);
+}
+.ct-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; transform: scale(1.08); }
+.ct-top { position: relative; display: flex; align-items: center; }
+.ct-icon {
+  width: 88rpx;
+  height: 88rpx;
+  flex: 0 0 88rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-right: 20rpx;
+  overflow: hidden;
+}
+.ct-icon-img { width: 88rpx; height: 88rpx; }
+/* 1.0.20：自定义上传图标铺满图标位（内置匹配图标仍按原比例 aspectFit）。
+   mode=aspectFill 为主，object-fit 为补充，与 Web/APP 的 icon-custom 同口径。 */
+.ct-icon-img.icon-custom { object-fit: cover; }
+.ct-meta { overflow: hidden; }
+.ct-name { display: block; font-size: 30rpx; font-weight: 700; color: #1f2430; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* 1.0.20 对比度对齐 Web：镜像名/状态/状态行文字整体加深一档，
+   旧色在半透明玻璃卡（rgba(255,255,255,.86)）上发虚、辨认度低。 */
+.ct-image { display: block; font-size: 23rpx; color: #788298; margin-top: 5rpx; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ct-state { display: flex; align-items: center; font-size: 23rpx; color: #556076; white-space: nowrap; margin-left: 12rpx; }
+/* 1.0.19：本体徽标——标记运行管理面板的容器，危险操作已被禁用 */
+.self-flag { display: inline-flex; align-items: center; margin-left: 10rpx; padding: 1rpx 10rpx; border-radius: 12rpx; background: #e6ecff; color: #4657c8; font-size: 21rpx; font-weight: 700; white-space: nowrap; }
+.ct-status { display: block; font-size: 24rpx; color: #556076; margin: 20rpx 0 18rpx; }
+/* 1.0.20：项目卡异常容器警告——状态行整行转橙，附「⚠ N 个容器异常」标签，与 Web/APP 同源 */
+.ct-status.status-warn { color: #c07a1e; }
+.status-warn-tag { display: inline-block; margin-left: 12rpx; padding: 2rpx 12rpx; border-radius: 10rpx; background: rgba(230,168,32,.18); color: #a6700d; font-size: 21rpx; font-weight: 700; }
+
+.meters { display: flex; margin-bottom: 18rpx; }
+.meter { flex: 1; min-width: 0; padding-right: 20rpx; }
+.meter:last-child { padding-right: 0; }
+.meter-label { display: flex; justify-content: space-between; font-size: 22rpx; color: #6f7a91; margin-bottom: 8rpx; }
+.meter-label .strong { color: #333d54; }
+/* 1.0.20：资源条对齐 Web——底槽从近白 #eef1f7 改深灰蓝 rgba(30,40,70,.14)，
+   填充从纯色改紫蓝渐变；CPU 0.5% 这类小占比才看得见（旧底槽与玻璃卡糊在一起）。 */
+.bar { height: 12rpx; border-radius: 6rpx; background: rgba(30,40,70,.14); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6rpx; background: linear-gradient(90deg,#7c8cff,#a88bff); }
+.bar-fill.warn { background: linear-gradient(90deg,#f5a742,#ef6b6b); }
+
+.ports { margin-bottom: 18rpx; }
+.ports-label {
+  display: block;
+  font-size: 23rpx;
+  font-weight: 700;
+  color: #6b7385;
+  border-left: 6rpx solid #6c7cff;
+  padding-left: 12rpx;
+  margin-bottom: 12rpx;
+  line-height: 1.2;
+}
+.chips { display: flex; flex-wrap: wrap; }
+/* 1.0.20：端口 chip 对齐 Web——底 rgba(124,140,255,.12)、字 #5566c9，
+   比旧 #eef1ff/#4a5b8c 更饱和醒目，玻璃卡上边界清晰。 */
+.port-chip {
+  min-height: 58rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #5566c9;
+  background: rgba(124,140,255,.12);
+  border: 1rpx solid rgba(124,140,255,.28);
+}
+.no-port { font-size: 23rpx; color: #8b93a5; }
+
+.ct-ops { margin-top: 4rpx; }
+/* 1.0.20：按钮对齐 Web 白底+清晰边框+深字，玻璃卡上按钮"浮起来"不再糊成一片。 */
+.op {
+  min-height: 76rpx;
+  line-height: 76rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  background: rgba(255,255,255,.92);
+  border: 1rpx solid rgba(30,40,70,.16);
+  color: #3f4a61;
+  font-size: 25rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(36,50,90,.06);
+}
+.op-primary { background: #6c7cff; color: #ffffff; border-color: #6c7cff; }
+/* 1.0.19：本体容器上被禁用的操作格——灰色不可点提示 */
+.op-disabled { display: block; min-height: 76rpx; line-height: 76rpx; text-align: center; border-radius: 16rpx; background: #f6f7fb; border: 1rpx dashed #d9deea; color: #9aa3b6; font-size: 23rpx; font-weight: 600; }
+.self-tip { cursor: default; }
+.op-full { width: 100%; margin: 0; }
+/* 1.0.17：项目卡「展开/收起」与上方启动/停止/重启批量操作行拉开间距，
+   原先 margin:0 贴在一起（用户反馈）。与 .project-ops 的 margin-top 对称。 */
+.ct-project .op-full { margin-top: 14rpx; }
+/* 1.0.20：项目整体启停行与状态/资源区拉开间距（与 .op-full 对称） */
+.ct-project .project-ops { margin-top: 12rpx; }
+
+.ct-project { background: linear-gradient(160deg, #ffffff 0%, #f7f8ff 100%); }
+
+.foot-note { text-align: center; font-size: 22rpx; color: #aab1c0; padding: 16rpx 0 8rpx; }
+
+/* ---------------- 1.0.5 只读同步 Web 端背景 ---------------- */
+/* 分组背景：图片 + 深色罩 + 白字；没设背景的分组保持原来的浅色排版，一点不变 */
+.group-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; transform: scale(1.06); }
+/* 1.0.20：无图分组的主题色渐变层，背景色由 model 预算后内联 style 注入 */
+.group-auto-bg { background-blend-mode: normal; }
+.group-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; }
+.group-inner { position: relative; z-index: 2; }
+.group.has-bg { overflow: hidden; padding: 8rpx 20rpx 0; }
+.group.has-bg .group-title { color: #ffffff; text-shadow: 0 1rpx 8rpx rgba(0, 0, 0, .6); }
+.group.has-bg .group-sub { color: rgba(255, 255, 255, .88); text-shadow: 0 1rpx 6rpx rgba(0, 0, 0, .5); }
+.group.has-bg .group-toggle { background: rgba(255, 255, 255, .22); border-color: rgba(255, 255, 255, .42); color: #ffffff; }
+.group.has-bg .group-toggle.is-on { background: rgba(255, 255, 255, .92); border-color: rgba(255, 255, 255, .92); color: #3b4560; }
+.group.has-bg .group-folded { color: rgba(255, 255, 255, .88); border-color: rgba(255, 255, 255, .42); }
+/* 1.0.18：分组渐变上的无背景卡片同样用 .86 玻璃态，与 Web 同口径（旧 .94 近乎纯白） */
+.group.has-bg .ct { background: rgba(255, 255, 255, .86); }
+.group.has-bg .ct.has-bg { background: #1b2233; }
+
+/* 卡片自身背景：与 Web 同款深色罩 + 白字；按钮/链接仍是浅色高对比控件块 */
+.ct-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; }
+.ct.has-bg { background: #1b2233; }
+.ct.has-bg > .ct-top,
+.ct.has-bg > .ct-status,
+.ct.has-bg > .meters,
+.ct.has-bg > .ports,
+.ct.has-bg > .ct-ops,
+/* 1.0.16：项目折叠卡也有背景了，操作区/展开按钮同样要浮在图上 */
+.ct.has-bg > .project-ops,
+.ct.has-bg > .op-full { position: relative; z-index: 2; }
+.ct.has-bg .ct-name { color: #ffffff; text-shadow: 0 1rpx 8rpx rgba(0, 0, 0, .55); }
+.ct.has-bg .ct-image,
+.ct.has-bg .ct-status,
+.ct.has-bg .ct-state,
+.ct.has-bg .meter-label,
+.ct.has-bg .meter-label .strong,
+.ct.has-bg .ports-label,
+.ct.has-bg .no-port { color: rgba(255, 255, 255, .88); text-shadow: 0 1rpx 6rpx rgba(0, 0, 0, .45); }
+.ct.has-bg .ports-label { border-left-color: #aab6ff; }
+.ct.has-bg .bar { background: rgba(255, 255, 255, .26); }
+.ct.has-bg .bar-fill { background: #9aa8ff; }
+.ct.has-bg .chips .chip { background: rgba(255, 255, 255, .9); }
+.ct.has-bg .op { background: rgba(255, 255, 255, .9); border-color: rgba(255, 255, 255, .6); color: #4a5468; }
+.ct.has-bg .op.op-primary { background: #6c7cff; border-color: #6c7cff; color: #ffffff; }
+.ct.has-bg .self-flag { background: rgba(230, 236, 255, .94); color: #4657c8; }
+.ct.has-bg .op-disabled { background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .4); color: rgba(255, 255, 255, .82); }
+
+/* ---------------- 1.0.10 整页壁纸 + 顶栏深色（同步 Web 显示效果） ---------------- */
+/* 整页壁纸层：照搬 Web 的 .wall-layer / .wall-mask，壁纸铺满且清晰可见；
+   内容包在 .content(z-index:1) 之上，壁纸只在卡片间隙 / 顶栏透出，与浏览器一致 */
+.page-bg-base {
+  position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 0;
+  background: #0b1020;
+}
+.page-bg {
+  position: fixed;
+  left: -24rpx; top: -24rpx;
+  width: calc(100% + 48rpx); height: calc(100% + 48rpx);
+  z-index: 0;
+}
+.page-bg-mask {
+  position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 0;
+  pointer-events: none;
+}
+.content { position: relative; z-index: 1; }
+
+/* 顶栏/概览：有背景图时照搬 Web 顶栏 has-bg —— 深色遮罩 + 白字，壁纸透出 */
+.hero.hero-has-bg {
+  background: rgba(255, 255, 255, .14);
+  border: 1rpx solid rgba(255, 255, 255, .5);
+  box-shadow: 0 10rpx 34rpx rgba(0, 0, 0, .28);
+}
+.hero.hero-has-bg .hero-bg { opacity: 1; }
+.hero.hero-has-bg .hero-mask { background: rgba(10, 16, 34, .42); }
+.hero.hero-has-bg .hero-title { color: #ffffff; text-shadow: 0 2rpx 12rpx rgba(0, 0, 0, .55); }
+.hero.hero-has-bg .hero-sub { color: rgba(255, 255, 255, .85); text-shadow: 0 1rpx 8rpx rgba(0, 0, 0, .5); }
+.hero.hero-has-bg .conn-badge { background: rgba(255, 255, 255, .92); border-color: rgba(30, 40, 70, .12); color: #3f4859; }
+.hero.hero-has-bg .stat { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .32); box-shadow: none; }
+.hero.hero-has-bg .stat-label { color: rgba(255, 255, 255, .88); }
+.hero.hero-has-bg .stat-num,
+.hero.hero-has-bg .stat-num-sm { color: #ffffff; text-shadow: 0 1rpx 8rpx rgba(0, 0, 0, .45); }
+
+/* 整页壁纸开启时，分组用白色玻璃浮在深色壁纸上（照搬 Web .group 默认），
+   深色标题/文字照常可读；分组自身设了背景图的仍走上面的 .has-bg 深色规则 */
+.has-wall .group {
+  background: rgba(255, 255, 255, .72);
+  border: 1rpx solid rgba(255, 255, 255, .5);
+  box-shadow: 0 8rpx 30rpx rgba(10, 18, 40, .18);
+}
+.has-wall .foot-note { color: rgba(255, 255, 255, .78); text-shadow: 0 1rpx 6rpx rgba(0, 0, 0, .55); }
