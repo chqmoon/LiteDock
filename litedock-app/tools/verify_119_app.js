@@ -1,11 +1,11 @@
 'use strict';
-/* APP 1.0.25 自我保护专项验证（自包含 CDP，真实 DOM 渲染 + 真实点击）：
+/* APP 1.0.26 自我保护专项验证（自包含 CDP，真实 DOM 渲染 + 真实点击）：
    fixture=state_self.json（litedock 容器 isSelf=true）
    ① APP 卡片：litedock 显示「◆ 本体」徽标 + "本体受保护"，无 停止/重启 按钮，保留 详情
    ② APP 卡片：其它容器（aitutor）仍有正常操作按钮，无本体徽标
    ③ APP 详情页：进入 litedock 详情，有受保护提示，无 停止/重启/暂停/升级重建，保留 检查更新/日志
    ④ APP 详情页：其它容器详情仍有完整操作
-   ⑤ APP 版本 = 1.0.25
+   ⑤ APP 版本 = 1.0.26
    运行：node tools/verify_119_app.js */
 const { spawn } = require('child_process');
 const path = require('path');
@@ -61,10 +61,10 @@ async function main() {
     await send('Page.navigate', { url: URL });
     await sleep(2800);
 
-    console.log('=== APP 1.0.25 自我保护：本体卡片 + 详情禁用 ===');
+    console.log('=== APP 1.0.26 自我保护：本体卡片 + 详情禁用 ===');
 
     const ver = await evalJs(`(function(){return (window.LD&&LD.APP_VERSION)||'';})()`);
-    ok('⑤ APP 版本 = 1.0.25', ver === '1.0.25', String(ver));
+    ok('⑤ APP 版本 = 1.0.26', ver === '1.0.26', String(ver));
 
     /* ---------- ① 卡片层 ---------- */
     const cards = JSON.parse(await evalJs(`(function(){

@@ -514,6 +514,12 @@
         '<button class="btn btn-small btn-ghost" data-ev="refresh" data-catch="1">刷新</button></div>' +
         '<div class="divider"></div>' + rows(d.envRows) + '</div>' +
       '<div class="card"><span class="section-title">当前连接</span><div class="divider"></div>' + rows(d.connRows) + '</div>' +
+      '<div class="card update-card"><div class="row-between"><span class="section-title">APP 更新</span>' +
+        '<button class="btn btn-small btn-ghost" data-ev="checkAppUpdate" data-catch="1">检查更新</button></div>' +
+        '<div class="divider"></div>' +
+        '<span class="update-state">' + e(d.updateState || '点击检查是否有新版本') + '</span>' +
+        (d.updateAvailable ? '<div class="update-actions"><button class="btn btn-small btn-primary" data-ev="installAppUpdate" data-catch="1">下载并安装</button></div>' : '') +
+      '</div>' +
       '<div class="card license-card"><span class="section-title">许可与来源</span><div class="divider"></div>' +
         '<span class="license-text">LiteDock 及其移动客户端为独立编写的原创项目，前后端代码与界面均自行实现，未包含或改写任何第三方项目源码，不受第三方开源许可证约束；本项目采用 MIT 许可证，可自由使用、修改与再分发。</span>' +
         '<span class="license-text license-gap">内置容器图标来自开源项目 homarr-labs/dashboard-icons（MIT 许可，全量引入 3900+ 个），各图标商标归原厂商所有，在此感谢该项目的整理与维护。</span>' +

@@ -8,10 +8,13 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +39,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Base64;
+import android.util.Log;
+import androidx.core.content.FileProvider;
 
 /**
  * LiteDock 原生 HTTP 插件。
@@ -256,6 +263,207 @@ public class LiteDockHttp extends Plugin {
             call.resolve(ret);
         } catch (Exception ex) {
             call.reject("open failed: " + ex.getMessage(), ex);
+        }
+    }
+
+    /* ==================== 1.0.26 APP 自更新 ====================
+       安全原则：
+       ① 自更新 API 与 APK 下载**绝不使用 TRUST_ALL**（那是给自签 NAS 用的）；
+          这里走系统默认证书链 + 默认域名校验，防止中间人替换安装包。
+       ② 域名白名单精确到 api.github.com / github.com / objects.githubusercontent.com，
+          拒绝重定向到白名单外地址。
+       ③ APK 下载完成后强制 SHA-256 比对（摘要来自同一份 API 响应），不一致立即删除。
+       ④ 安装走 FileProvider content:// Uri，不依赖公开目录。 */
+
+    private static final String TAG = "LiteDockUpdate";
+    private static final String API_HOST = "api.github.com";
+    private static final String API_PATH = "/repos/chqmoon/LiteDock/releases/latest";
+    private static final String APK_HOST = "github.com";
+    private static final String APK_PATH_PREFIX = "/chqmoon/LiteDock/releases/download/";
+    private static final String CDN_HOST = "objects.githubusercontent.com";
+
+    private static boolean isSafeUpdateApi(String url) {
+        try {
+            URL u = new URL(url);
+            return "https".equalsIgnoreCase(u.getProtocol())
+                    && API_HOST.equalsIgnoreCase(u.getHost())
+                    && API_PATH.equals(u.getPath());
+        } catch (Exception e) { return false; }
+    }
+
+    private static boolean isSafeApkUrl(String url) {
+        try {
+            URL u = new URL(url);
+            String host = u.getHost();
+            if (!"https".equalsIgnoreCase(u.getProtocol())) return false;
+            if (CDN_HOST.equalsIgnoreCase(host)) return true;
+            return APK_HOST.equalsIgnoreCase(host)
+                    && (u.getPath() + "").startsWith(APK_PATH_PREFIX);
+        } catch (Exception e) { return false; }
+    }
+
+    /** 查最新版本：严格 TLS，不走 TRUST_ALL，不跟随白名单外重定向 */
+    @PluginMethod
+    public void fetchLatestRelease(PluginCall call) {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                HttpURLConnection conn = null;
+                try {
+                    String url = "https://" + API_HOST + API_PATH;
+                    URL u = new URL(url);
+                    conn = (HttpURLConnection) u.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(12000);
+                    conn.setReadTimeout(12000);
+                    conn.setRequestProperty("Accept", "application/vnd.github+json");
+                    conn.setRequestProperty("User-Agent", "LiteDock-App-Updater");
+                    conn.setInstanceFollowRedirects(false);
+                    int status = conn.getResponseCode();
+                    if (status != 200) { call.reject("GitHub API HTTP " + status); return; }
+                    InputStream is = conn.getInputStream();
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    byte[] buf = new byte[8192];
+                    int n;
+                    while ((n = is.read(buf)) != -1) bos.write(buf, 0, n);
+                    is.close();
+                    JSObject ret = new JSObject();
+                    ret.put("status", status);
+                    ret.put("data", new String(bos.toByteArray(), "UTF-8"));
+                    call.resolve(ret);
+                } catch (Exception ex) {
+                    call.reject("fetch release failed: " + ex.getMessage(), ex);
+                } finally {
+                    if (conn != null) conn.disconnect();
+                }
+            }
+        }, "litedock-update").start();
+    }
+
+    /** 下载 APK 到应用私有缓存目录；白名单 + 严格 TLS + SHA-256 校验 */
+    @PluginMethod
+    public void downloadApk(PluginCall call) {
+        final String url = call.getString("url");
+        final String expectHex = call.getString("sha256");
+        if (!isSafeApkUrl(url == null ? "" : url)) {
+            call.reject("unsafe download url");
+            return;
+        }
+        if (expectHex == null || !expectHex.matches("(?i)^[0-9a-f]{64}$")) {
+            call.reject("missing sha256");
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override public void run() {
+                HttpURLConnection conn = null;
+                File tmp = null;
+                try {
+                    String current = url;
+                    File dir = new File(getContext().getCacheDir(), "updates");
+                    if (!dir.exists() && !dir.mkdirs()) throw new Exception("cannot create update dir");
+                    tmp = new File(dir, "litedock-update.apk");
+                    long total = 0;
+                    String actual = "";
+
+                    /* 流式下载 + 流式摘要：不把 4MB APK 整体读进内存，避免低端机 OOM */
+                    for (int hop = 0; hop < 5; hop++) {
+                        URL u = new URL(current);
+                        conn = (HttpURLConnection) u.openConnection();
+                        conn.setRequestMethod("GET");
+                        conn.setConnectTimeout(20000);
+                        conn.setReadTimeout(30000);
+                        conn.setRequestProperty("User-Agent", "LiteDock-App-Updater");
+                        conn.setInstanceFollowRedirects(false);
+                        int st = conn.getResponseCode();
+                        if (st >= 300 && st < 400) {
+                            String loc = conn.getHeaderField("Location");
+                            conn.disconnect();
+                            conn = null;
+                            if (tmp.exists() && !tmp.delete()) throw new Exception("cannot reset temp");
+                            if (loc == null || !isSafeApkUrl(loc)) throw new Exception("unsafe redirect");
+                            current = new URL(new URL(current), loc).toString();
+                            if (!isSafeApkUrl(current)) throw new Exception("unsafe redirect target");
+                            continue;
+                        }
+                        if (st != 200) throw new Exception("HTTP " + st);
+                        MessageDigest md = MessageDigest.getInstance("SHA-256");
+                        InputStream is = conn.getInputStream();
+                        FileOutputStream fos = new FileOutputStream(tmp, false);
+                        byte[] buf = new byte[16384];
+                        int n;
+                        while ((n = is.read(buf)) != -1) {
+                            fos.write(buf, 0, n);
+                            md.update(buf, 0, n);
+                            total += n;
+                        }
+                        fos.flush();
+                        fos.close();
+                        is.close();
+                        byte[] digest = md.digest();
+                        StringBuilder sb = new StringBuilder();
+                        for (byte b : digest) sb.append(String.format("%02x", b & 0xff));
+                        actual = sb.toString();
+                        break;
+                    }
+                    if (total == 0) throw new Exception("empty download");
+                    if (!actual.equalsIgnoreCase(expectHex)) {
+                        throw new Exception("sha256 mismatch: expected=" + expectHex + " actual=" + actual);
+                    }
+
+                    JSObject ret = new JSObject();
+                    ret.put("path", tmp.getAbsolutePath());
+                    ret.put("size", total);
+                    ret.put("sha256", actual);
+                    call.resolve(ret);
+                } catch (Exception ex) {
+                    if (tmp != null && tmp.exists() && !tmp.delete()) Log.w(TAG, "cannot delete bad apk");
+                    call.reject("download failed: " + ex.getMessage(), ex);
+                } finally {
+                    if (conn != null) conn.disconnect();
+                }
+            }
+        }, "litedock-download").start();
+    }
+
+    /** 用 FileProvider 拉起系统安装器；返回 need_permission 让 JS 引导用户开启 */
+    @PluginMethod
+    public void installApk(PluginCall call) {
+        String path = call.getString("path");
+        File dir = new File(getContext().getCacheDir(), "updates");
+        File apk = path == null ? null : new File(path);
+        if (apk == null || !apk.isFile()
+                || !apk.getAbsolutePath().startsWith(dir.getAbsolutePath())) {
+            call.reject("invalid apk path");
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && !getContext().getPackageManager().canRequestPackageInstalls()) {
+            JSObject ret = new JSObject();
+            ret.put("need_permission", true);
+            try {
+                Intent settings = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                        Uri.parse("package:" + getContext().getPackageName()));
+                settings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(settings);
+                ret.put("opened_settings", true);
+            } catch (Exception e) {
+                ret.put("opened_settings", false);
+            }
+            call.resolve(ret);
+            return;
+        }
+        try {
+            Uri uri = FileProvider.getUriForFile(getContext(),
+                    getContext().getPackageName() + ".fileprovider", apk);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+            JSObject ret = new JSObject();
+            ret.put("opened", true);
+            call.resolve(ret);
+        } catch (Exception ex) {
+            call.reject("install failed: " + ex.getMessage(), ex);
         }
     }
 }

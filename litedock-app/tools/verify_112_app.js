@@ -114,7 +114,7 @@ async function main() {
     ok('⑤ 面板无 NaN/undefined/Infinity', cards.single && cards.project && !cards.single.hasNaN && !cards.project.hasNaN,
        JSON.stringify({s:cards.single&&cards.single.hasNaN,p:cards.project&&cards.project.hasNaN}));
     /* ⑥ 版本 */
-    ok('⑥ 版本号 = 1.0.25', cards.ver === '1.0.25', cards.ver);
+    ok('⑥ 版本号 = 1.0.25', cards.ver === '1.0.26', cards.ver);
 
     /* ⑦ 展开项目后子容器卡正常显示 */
     const toggle = await evalJs(`(function(){

@@ -5,7 +5,7 @@
    ③ 点开关暂停后不再请求，再点恢复后继续
    ④ 手动「刷新」按钮仍在且可用
    ⑤ 切回首页后旧定时器不再打接口（实例切换 + DOM 判据）
-   ⑥ 静态：源 / 生成物 / 版本 1.0.25
+   ⑥ 静态：源 / 生成物 / 版本 1.0.26
    运行：node tools/verify_130_app_log.js */
 const { spawn } = require('child_process');
 const fs = require('fs');
@@ -70,7 +70,7 @@ async function main() {
     ok('⑥ 生成物 bundle 含完整逻辑', /_tickLogAuto/.test(bundle) && /logAuto: true/.test(bundle) && /refreshLogsQuiet/.test(bundle));
     ok('⑥ 生成物 CSS 含 log-ops 且 rpx 已转', /\.log-ops/.test(css) && !/\d+rpx/.test(css));
     ok('⑥ APP 模板含 toggleLogAuto 按钮', /data-ev="toggleLogAuto"/.test(tpl));
-    ok('⑥ APP 版本 = 1.0.25', /LD\.APP_VERSION = '1\.0\.25'/.test(shim));
+    ok('⑥ APP 版本 = 1.0.26', /LD\.APP_VERSION = '1\.0\.26'/.test(shim));
 
     /* ---------- mock 插件包一层计数 ---------- */
     await evalJs(`(function(){

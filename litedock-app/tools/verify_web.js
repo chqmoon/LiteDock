@@ -316,7 +316,7 @@ ok('⑨ 真机 CDP 触摸回放（verify_touch.js）覆盖长按双复制 / 打�
    fs.existsSync(path.join(__dirname, 'verify_touch.js')) &&
    /Input\.dispatchTouchEvent/.test(fs.readFileSync(path.join(__dirname, 'verify_touch.js'), 'utf8')));
 ok('⑩ 版本号与构建产物同步（versionCode 25 / APK 1.0.24）',
-   /APP_VERSION = "1\.0\.24"/.test(pyCfg) && /VERSION_CODE = 25/.test(pyCfg) &&
+   /APP_VERSION = "1\.0\.26"/.test(pyCfg) && /VERSION_CODE = 27/.test(pyCfg) &&
    /LiteDock-App-1\.0\.24\.apk/.test(pyBuild));
 
 
@@ -531,7 +531,7 @@ ok('③ 反馈是 CSS 动画 + animationend 自清，函数内零悬挂定时器
    /@keyframes ld-link-copied-flash/.test(shellCss) && /ld-link-copied/.test(shellCss));
 ok('④ 版本同步 1.0.24 / versionCode 25 / 构建产物 1.0.24',
    /LD\.APP_VERSION = '1\.0\.24'/.test(shimSrc) &&
-   /APP_VERSION = "1\.0\.24"/.test(pyCfg) && /VERSION_CODE = 25/.test(pyCfg) &&
+   /APP_VERSION = "1\.0\.26"/.test(pyCfg) && /VERSION_CODE = 27/.test(pyCfg) &&
    /LiteDock-App-1\.0\.24\.apk/.test(pyBuild));
 ok('⑤ CDP 真机回放覆盖「系统提示 + APP toast」双提示复现与修复后单提示断言',
    /sys-clip-toast/.test(touchSrc) && /__copiedVisible/.test(touchSrc) &&
@@ -632,7 +632,7 @@ ok('⑦ shell.css 有项目批量按钮与备份列表样式（vw 坐标系）',
    /\.project-ops/.test(shellCss) && /\.bk-list/.test(shellCss) && /\.bk-kind/.test(shellCss));
 ok('⑧ APP 版本 1.0.24 / versionCode 25',
    /LD\.APP_VERSION = '1\.0\.24'/.test(shimSrc) &&
-   /APP_VERSION = "1\.0\.24"/.test(pyCfg) && /VERSION_CODE = 25/.test(pyCfg));
+   /APP_VERSION = "1\.0\.26"/.test(pyCfg) && /VERSION_CODE = 27/.test(pyCfg));
 
 section('1.0.16 项目卡背景 + 详情页更新入口 + 静默刷新（APP 源码静态断言）');
 const modelSrc1016 = fs.readFileSync(path.join(__dirname, '..', '..', 'litedock-miniprogram', 'utils', 'model.js'), 'utf8');

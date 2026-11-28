@@ -50,7 +50,7 @@ def main():
         sys.exit(1)
 
     os.makedirs(RELEASES, exist_ok=True)
-    dst = os.path.join(RELEASES, "LiteDock-App-1.0.25.apk")
+    dst = os.path.join(RELEASES, "LiteDock-App-1.0.26.apk")
     shutil.copy2(apk, dst)
     h = hashlib.md5(open(dst, "rb").read()).hexdigest()
     print("APK:", dst)

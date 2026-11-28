@@ -131,7 +131,7 @@ async function main() {
 
     // ⑤ 版本号
     const ver = await evalJs(`(function(){return (window.LD&&LD.APP_VERSION)||'';})()`);
-    ok('⑤ APP 版本 1.0.25', ver === '1.0.25', ver);
+    ok('⑤ APP 版本 1.0.26', ver === '1.0.26', ver);
 
     console.log('\n========================================');
     console.log('PASS=' + PASS + '  FAIL=' + FAIL);

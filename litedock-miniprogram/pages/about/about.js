@@ -7,7 +7,10 @@ Page({
     miniVersion: '1.0.21',
     appVersion: '–',
     envRows: [],
-    connRows: []
+    connRows: [],
+    updateState: '',
+    updateAvailable: false,
+    updateInfo: null
   },
 
   onShow() {
@@ -70,5 +73,14 @@ Page({
       if (r.ok) this.fill(r.data);
       wx.showToast({ title: r.ok ? '已刷新' : '刷新失败', icon: 'none' });
     });
+  },
+
+  /* 1.0.26 APP 自更新：小程序端只提示不支持；APP 构建补丁会整体替换下面两个方法 */
+  checkAppUpdate() {
+    this.setData({ updateState: '小程序版本不支持自动更新，请使用安卓 APP' });
+  },
+
+  installAppUpdate() {
+    wx.showToast({ title: '请使用安卓 APP 更新', icon: 'none' });
   }
 });

@@ -168,5 +168,24 @@ module.exports = {
   /* 1.0.15：升级备份管理（已从主列表隐藏的 backup/newer 容器） */
   getBackups: () => request('GET', '/api/backups', undefined, 15000),
   backupRollback: (id) => request('POST', '/api/backup/' + encodeURIComponent(id) + '/rollback', undefined, 60000),
-  backupDelete: (id) => request('POST', '/api/backup/' + encodeURIComponent(id) + '/delete', undefined, 60000)
+  backupDelete: (id) => request('POST', '/api/backup/' + encodeURIComponent(id) + '/delete', undefined, 60000),
+  /* 1.0.26 APP 自更新：不复用 request()，因为更新源是固定的 GitHub 公开 API，
+     与用户填写的 NAS 连接完全无关。APP 构建补丁会把此函数替换为原生严格 TLS 实现，
+     小程序端保持 wx.request（未发布、且不需要自更新）。 */
+  fetchAppRelease: () => new Promise((resolve) => {
+    wx.request({
+      url: 'https://api.github.com/repos/chqmoon/LiteDock/releases/latest',
+      method: 'GET',
+      header: { Accept: 'application/vnd.github+json', 'User-Agent': 'LiteDock-App-Updater' },
+      timeout: 12000,
+      success(res) {
+        if (res.statusCode === 200 && res.data && res.data.tag_name) {
+          resolve({ ok: true, data: res.data });
+        } else {
+          resolve({ ok: false, error: 'GitHub API HTTP ' + res.statusCode });
+        }
+      },
+      fail(err) { resolve({ ok: false, error: String((err && err.errMsg) || err || '网络失败') }); }
+    });
+  })
 };

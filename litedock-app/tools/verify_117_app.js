@@ -8,7 +8,7 @@
    ③ 多容器项目成员（safeline 子容器）详情页有「镜像更新」卡（1.0.17 全开放），
       且卡内有 ⚠ 项目警告行；点升级重建弹出的确认框含警告文案
    ④ 单容器项目（aitutor）详情页入口不回归（无警告行）
-   ⑤ APP 版本 1.0.25
+   ⑤ APP 版本 1.0.26
    运行：node verify_117_app.js   （LD_WWW=路径 可回放 APK 解包前端；LD_WWW=1 走脚本自身 www） */
 const { spawn } = require('child_process');
 const fs = require('fs');
@@ -68,7 +68,7 @@ async function main() {
     await send('Page.navigate', { url: URL });
     await sleep(2800);
 
-    console.log('=== APP 1.0.25 项目卡间距 + 检查更新弹窗 + 项目成员更新入口 真实浏览器验证 ===');
+    console.log('=== APP 1.0.26 项目卡间距 + 检查更新弹窗 + 项目成员更新入口 真实浏览器验证 ===');
 
     // ① 项目卡「展开/收起」与批量操作行的间距（常规模式）
     const gapNormal = JSON.parse(await evalJs(`(function(){
@@ -209,7 +209,7 @@ async function main() {
 
     // ⑤ 版本号
     const ver = await evalJs(`(function(){return (window.LD&&LD.APP_VERSION)||'';})()`);
-    ok('⑤ APP 版本 1.0.25', ver === '1.0.25', ver);
+    ok('⑤ APP 版本 1.0.26', ver === '1.0.26', ver);
 
     console.log('\n========================================');
     console.log('PASS=' + PASS + '  FAIL=' + FAIL);

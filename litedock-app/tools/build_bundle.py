@@ -150,7 +150,129 @@ _APP_CHIPS_NEW = """function chipsOf(list, cfg, nasHost, isProxy) {
   return out;
 }"""
 
+# 1.0.26 APP 自更新：把小程序端的两个占位方法替换为原生实现。
+# 小程序权威源保持通用（不依赖原生插件），APP 端由构建期精确替换。
+_APP_UPDATE_OLD = """  /* 1.0.26 APP 自更新：小程序端只提示不支持；APP 构建补丁会整体替换下面两个方法 */
+  checkAppUpdate() {
+    this.setData({ updateState: '小程序版本不支持自动更新，请使用安卓 APP' });
+  },
+
+  installAppUpdate() {
+    wx.showToast({ title: '请使用安卓 APP 更新', icon: 'none' });
+  }
+});"""
+
+_APP_UPDATE_NEW = """  /* APP 1.0.26：GitHub Release 自更新（原生严格 TLS + SHA-256 校验） */
+  _cmpVer(a, b) {
+    const pa = String(a || '').replace(/^v/i, '').split('.').map(Number);
+    const pb = String(b || '').replace(/^v/i, '').split('.').map(Number);
+    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+      const x = pa[i] || 0, y = pb[i] || 0;
+      if (x !== y) return x > y ? 1 : -1;
+    }
+    return 0;
+  },
+
+  _updatePlugin() {
+    try {
+      /* bundle 模块作用域里没有 global（shim 用闭包传参），只能读 window */
+      const C = window.Capacitor;
+      return (C && C.Plugins && C.Plugins.LiteDockHttp) || null;
+    } catch (e) { return null; }
+  },
+
+  /* 启动静默检查只写 ld_app_update_seen，关于页打开时读出来提示 */
+  _showSilentHint() {
+    const seen = localStorage.getItem('ld_app_update_seen');
+    if (seen) {
+      this.setData({ updateState: '发现新版本 ' + seen + '，可点击检查更新后安装', updateAvailable: false });
+    }
+  },
+
+  checkAppUpdate(silent) {
+    const self = this;
+    const plugin = this._updatePlugin();
+    const current = (window.LD && window.LD.APP_VERSION) || '0.0.0';
+    if (!plugin || !plugin.fetchLatestRelease) {
+      if (!silent) this.setData({ updateState: '当前环境不支持自动更新，请到 GitHub Releases 手动下载' });
+      return Promise.resolve({ ok: false });
+    }
+    return plugin.fetchLatestRelease().then((res) => {
+      let body;
+      try { body = JSON.parse(res.data); } catch (e) { throw new Error('解析版本信息失败'); }
+      const tag = String(body.tag_name || '');
+      const latest = tag.replace(/^app-v/i, '');
+      const asset = (body.assets || []).find((a) =>
+        /\\.apk$/i.test(a.name || '') && /^sha256:[0-9a-f]{64}$/i.test(a.digest || ''));
+      if (!asset) throw new Error('未找到带校验值的 APK');
+      if (this._cmpVer(latest, current) <= 0) {
+        self.setData({ updateState: '已是最新版本 ' + current, updateAvailable: false, updateInfo: null });
+        if (!silent) wx.showToast({ title: '已是最新版本', icon: 'none' });
+        return { ok: true, hasUpdate: false };
+      }
+      const info = {
+        version: latest,
+        tag: tag,
+        url: asset.browser_download_url,
+        sha256: String(asset.digest).replace(/^sha256:/i, ''),
+        size: asset.size
+      };
+      self.setData({ updateState: '发现新版本 ' + latest + '，点击下方按钮下载安装', updateAvailable: true, updateInfo: info });
+      try { localStorage.setItem('ld_app_update_seen', latest); } catch (e) {}
+      if (!silent) {
+        wx.showModal({
+          title: '发现新版本 ' + latest,
+          content: '新版已发布到 GitHub Releases。下载将校验 SHA-256，安装需系统确认。',
+          confirmText: '去更新',
+          success(r) { if (r.confirm) self.installAppUpdate(); }
+        });
+      }
+      return { ok: true, hasUpdate: true, info: info };
+    }).catch((err) => {
+      if (!silent) {
+        self.setData({ updateState: '检查失败：' + ((err && err.message) || err) });
+        wx.showToast({ title: '检查更新失败', icon: 'none' });
+      }
+      return { ok: false, error: String((err && err.message) || err) };
+    });
+  },
+
+  installAppUpdate() {
+    const info = this.data.updateInfo;
+    if (!info) { wx.showToast({ title: '请先检查更新', icon: 'none' }); return; }
+    const plugin = this._updatePlugin();
+    if (!plugin || !plugin.downloadApk || !plugin.installApk) {
+      wx.showToast({ title: '当前环境不支持安装', icon: 'none' });
+      return;
+    }
+    const self = this;
+    this.setData({ updateState: '正在下载 ' + info.version + '…（校验通过后安装）', updateAvailable: false });
+    wx.showLoading({ title: '下载中', mask: true });
+    plugin.downloadApk({ url: info.url, sha256: info.sha256 }).then((r) => {
+      wx.hideLoading();
+      return plugin.installApk({ path: r.path }).then((ins) => {
+        if (ins && ins.need_permission) {
+          self.setData({ updateState: '请允许安装未知应用后，再点「下载并安装」', updateAvailable: true });
+        } else {
+          self.setData({ updateState: '安装包已校验，等待系统安装…', updateAvailable: false });
+        }
+        return ins;
+      });
+    }).catch((err) => {
+      wx.hideLoading();
+      self.setData({ updateState: '下载或校验失败：' + ((err && err.message) || err), updateAvailable: true });
+      wx.showToast({ title: '更新失败', icon: 'none' });
+    });
+  }
+});"""
+
 APP_PATCHES = {
+    # 1.0.26：关于页 APP 自更新
+    "pages/about/about.js": [
+        ("  onShow() {\n    this.load();\n  },",
+         "  onShow() {\n    this.load();\n    if (this._showSilentHint) this._showSilentHint();\n  },"),
+        (_APP_UPDATE_OLD, _APP_UPDATE_NEW),
+    ],
     # 1.0.8：详情页端口表跟随 B 开关（组网回家时反代连接也要能看到端口）。
     # isProxy 不再被覆盖，保持「连接是不是反代」的纯粹含义。
     "pages/detail/detail.js": [
@@ -197,6 +319,48 @@ def apply_app_patches(rel, code):
     return code
 
 
+def patch_app_global(code):
+    """APP 启动静默检查：延迟 8s，每天一次；只写标记，不弹窗、不阻塞。"""
+    old = """  onLaunch() {
+    connection.ensureDefaults();
+    this.globalData.connectionKey = this.currentKey();
+  },"""
+    new = """  onLaunch() {
+    connection.ensureDefaults();
+    this.globalData.connectionKey = this.currentKey();
+    /* APP 1.0.26：启动静默检查 APP 更新（每天一次，延迟 8s 不抢首屏）。
+       只走原生插件；无插件（浏览器预览/小程序）自动跳过。 */
+    if (typeof window !== 'undefined' && window.LD) {
+      setTimeout(function () {
+        try {
+          const today = new Date().toISOString().slice(0, 10);
+          if (localStorage.getItem('ld_app_update_day') === today) return;
+          const C = window.Capacitor;
+          const p = C && C.Plugins && C.Plugins.LiteDockHttp;
+          if (!p || !p.fetchLatestRelease) return;
+          localStorage.setItem('ld_app_update_day', today);
+          p.fetchLatestRelease().then(function (res) {
+            let body; try { body = JSON.parse(res.data); } catch (e) { return; }
+            const tag = String(body.tag_name || '');
+            const latest = String(body.tag_name || '').replace(/^app-v/i, '');
+            const current = String(window.LD.APP_VERSION || '0.0.0');
+            const cu = current.split('.').map(Number), lu = latest.split('.').map(Number);
+            let newer = false;
+            for (let i = 0; i < 3; i++) {
+              if ((lu[i] || 0) > (cu[i] || 0)) { newer = true; break; }
+              if ((lu[i] || 0) < (cu[i] || 0)) break;
+            }
+            if (newer) localStorage.setItem('ld_app_update_seen', latest);
+          }).catch(function () {});
+        } catch (e) {}
+      }, 8000);
+    }
+  },"""
+    if old not in code:
+        raise SystemExit("APP global patch MISSED in app.js onLaunch")
+    return code.replace(old, new, 1)
+
+
 def main():
     parts = ["/* LiteDock App — 由 tools/build_bundle.py 从小程序源码自动生成，请勿手改 */\n",
              "/* 源：litedock-miniprogram 的 utils 模块、app.js 与 pages 各页 JS，业务逻辑零改动 */\n\n"]
@@ -208,7 +372,7 @@ def main():
 
     # App() 全局对象
     with open(os.path.join(MP, "app.js"), encoding="utf-8") as f:
-        appcode = f.read()
+        appcode = patch_app_global(f.read())
     parts.append("/* ===== app.js ===== */\n(function(require, module, exports) {\n%s\n})(LD.makeRequire('app.js'), {exports:{}}, {});\n\n" % appcode)
 
     for p in PAGES:

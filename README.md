@@ -52,6 +52,7 @@
 - **内置 3911 个应用图标**：来自 [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons)（MIT），按容器名与镜像名自动匹配。
 - **面板会保护自己**：识别运行自身的容器，禁止从界面停止 / 重启 / 升级自己，避免把自己关在门外。
 - **日志不用来回点**：Web 日志弹窗与 APP 详情页每 5 秒自动刷新，可随时暂停。
+- **APP 能自己更新**：在「关于 → APP 更新」检查新版，下载后用 Release 提供的 SHA-256 校验值核对，再交给系统安装器，不替你静默装包。
 
 ### 工作原理
 
@@ -114,7 +115,9 @@ services:
 
 ### 2. 安卓 APP
 
-从项目的 **Releases** 页面下载 `LiteDock-App-*.apk` 侧载安装，打开后在「连接管理」里填 Web 面板的地址。若服务端设置了 `ACCESS_PASSWORD`，在连接里填同一个密码即可。
+当前安卓版本：**1.0.26**（[下载 APK](https://github.com/chqmoon/LiteDock/releases/download/app-v1.0.26/LiteDock-App-1.0.26.apk) · [全部版本](https://github.com/chqmoon/LiteDock/releases)）。侧载安装后，打开 APP 在「连接管理」里填 Web 面板的地址；若服务端设置了 `ACCESS_PASSWORD`，在连接里填同一个密码即可。
+
+APP 内「关于 → APP 更新」可检查新版本：发现新版后点「下载并安装」，APK 从 GitHub Releases 下载并用该 Release 提供的 SHA-256 摘要核对，确认一致才交给系统安装器。启动时也会每天在后台检查一次，只在关于页显示提示，不弹窗打扰。
 
 ### 3. 配置
 
@@ -132,6 +135,8 @@ docker compose pull && docker compose up -d
 ```
 
 配置与壁纸保存在挂载的 `./data`，更新容器不会丢。
+
+APP 的更新在「关于 → APP 更新」里完成，会下载新 APK 并校验摘要；首次侧载安装时，系统可能要求确认「允许安装未知来源应用」，按提示授权即可。
 
 </details>
 

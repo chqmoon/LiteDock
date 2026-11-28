@@ -118,7 +118,7 @@ async function main() {
     }
     ok('④/⑤ 面板无 NaN/undefined/Infinity', !!(s && p && !s.hasNaN && !p.hasNaN), JSON.stringify({s:s&&s.hasNaN,p:p&&p.hasNaN}));
     /* ⑥ 版本 */
-    ok('⑥ 版本号 = 1.0.25', cards.ver === '1.0.25', cards.ver);
+    ok('⑥ 版本号 = 1.0.25', cards.ver === '1.0.26', cards.ver);
 
     /* ⑦ 展开子容器不回归 */
     const toggle = await evalJs(`(function(){ var b=document.querySelector('.ct-project .op-full'); if(b){b.click(); return true;} return false; })()`);

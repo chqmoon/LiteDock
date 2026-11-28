@@ -1,11 +1,11 @@
 'use strict';
-/* APP 1.0.25 卡片对比度专项验证（自包含 CDP，真实 DOM 渲染 + getComputedStyle）：
+/* APP 1.0.26 卡片对比度专项验证（自包含 CDP，真实 DOM 渲染 + getComputedStyle）：
    ① 资源条：底槽 rgba(30,40,70,.14)（不再近白）、填充紫蓝线性渐变
    ② 端口 chip：字色 #5566c9(85,102,201)、紫色染底 + 边框
    ③ 操作按钮：白底 rgba(255,255,255,.92) + 清晰边框 + 深字
    ④ 次级文字：镜像名/状态行/CPU 标签色已加深（非旧 #9aa3b2/#6b7385）
    ⑤ 深卡背景变体（has-bg）未被破坏：bar 底 rgba(255,255,255,.26)、button 白底
-   ⑥ 静态：源 wxss 与生成物 litedock.css 均含新色值；APP 版本 1.0.25
+   ⑥ 静态：源 wxss 与生成物 litedock.css 均含新色值；APP 版本 1.0.26
    ⑦ 详情页同样对齐（进入 detail 页取计算样式）
    运行：node tools/verify_120_contrast.js */
 const { spawn } = require('child_process');
@@ -58,7 +58,7 @@ async function main() {
     await send('Page.navigate', { url: URL });
     await sleep(2800);
 
-    console.log('=== APP 1.0.25 卡片对比度：文字 / 按钮 / 端口 / 资源条 ===');
+    console.log('=== APP 1.0.26 卡片对比度：文字 / 按钮 / 端口 / 资源条 ===');
 
     /* ---------- 静态核对：源 + 生成物 ---------- */
     const wxssIdx = fs.readFileSync(path.join(ROOT, '..', 'litedock-miniprogram', 'pages', 'index', 'index.wxss'), 'utf8');
@@ -74,7 +74,7 @@ async function main() {
        (cssGen.match(/rgba\(30,40,70,\.14\)/g) || []).length >= 2 &&
        /#5566c9/.test(cssGen));
     ok('⑥ 生成物无 rpx 残留（build_css 正常）', !/\d+rpx/.test(cssGen));
-    ok('⑥ APP 版本 = 1.0.25', /LD\.APP_VERSION = '1\.0\.25'/.test(shim));
+    ok('⑥ APP 版本 = 1.0.26', /LD\.APP_VERSION = '1\.0\.26'/.test(shim));
 
     /* ---------- ① 资源条（卡片层，取任意渲染出的单容器卡） ---------- */
     const bar = JSON.parse(await evalJs(`(function(){

@@ -5,8 +5,8 @@
 import os, sys, re, shutil
 
 APP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-APP_VERSION = "1.0.25"
-VERSION_CODE = 26
+APP_VERSION = "1.0.26"
+VERSION_CODE = 27
 SRC_CFG = os.path.join(APP, "android-config")
 ANDROID = os.path.join(APP, "android")
 PKG_DIR = os.path.join(ANDROID, "app", "src", "main", "java", "cn", "starkc", "litedock")
@@ -54,7 +54,9 @@ def main():
     # --- 2. AndroidManifest：INTERNET / 明文流量 / 网络安全配置 ---
     m = read(MANIFEST)
     missing = [p for p in ("android.permission.INTERNET",
-                           "android.permission.ACCESS_NETWORK_STATE") if p not in m]
+                           "android.permission.ACCESS_NETWORK_STATE",
+                           # 1.0.26：APP 自更新需要请求安装未知来源 APK（用户仍需在系统弹窗确认）
+                           "android.permission.REQUEST_INSTALL_PACKAGES") if p not in m]
     if missing:
         if 'xmlns:android' not in m:
             m = m.replace("<manifest", '<manifest xmlns:android="http://schemas.android.com/apk/res/android"', 1)
@@ -79,6 +81,18 @@ def main():
         end = m.rfind("</manifest>")
         if end > 0:
             m = m[:end] + q + m[end:]
+    # 1.0.26：安装 APK 的 Intent 可见性（Android 11+ package visibility）
+    # 必须合并进同一个 <queries>：多个 queries 块会在 manifest merger 阶段报错
+    if "application/vnd.android.package-archive" not in m:
+        install_intent = ('        <intent>\n'
+                          '            <action android:name="android.intent.action.VIEW" />\n'
+                          '            <data android:mimeType="application/vnd.android.package-archive" />\n'
+                          '        </intent>\n')
+        if "</queries>" in m:
+            m = m.replace("</queries>", install_intent + "    </queries>", 1)
+        else:
+            m = m.replace("</manifest>",
+                          "    <queries>\n" + install_intent + "    </queries>\n</manifest>", 1)
     write(MANIFEST, m)
     print("patched AndroidManifest.xml", flush=True)
 

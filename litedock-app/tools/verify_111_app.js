@@ -85,7 +85,7 @@ async function main() {
     console.log('  default:', JSON.stringify(def));
     ok('② 默认无 .ld-compact class（紧凑默认关）', def.compactCls === false, JSON.stringify(def));
     ok('② 默认 localStorage 无 ld_compact 记录', def.kv === null, def.kv);
-    ok('  版本号 = 1.0.25', def.ver === '1.0.25', def.ver);
+    ok('  版本号 = 1.0.25', def.ver === '1.0.26', def.ver);
 
     /* --- 完整显示基线：记录 .ct 常规 padding 与 .ct-icon 尺寸，供之后对比 --- */
     const base = JSON.parse(await evalJs(`(function(){

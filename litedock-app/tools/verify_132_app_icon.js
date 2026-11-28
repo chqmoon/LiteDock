@@ -1,9 +1,9 @@
 'use strict';
-/* APP 1.0.25 自定义图标铺满专项验证（自包含 CDP，真实 DOM + getComputedStyle）：
+/* APP 1.0.26 自定义图标铺满专项验证（自包含 CDP，真实 DOM + getComputedStyle）：
    ① 静态：bundle 含 iconIsCustom；templates 三处 img 条件加 icon-custom；shell.css cover 规则
    ② 注入 fixture 给 aitutor 绑定自定义图标 → 卡片渲染 img.ct-icon-img.icon-custom，object-fit=cover
    ③ 未绑定自定义的内置图标仍 contain，无 icon-custom class
-   ④ APP 版本 = 1.0.25
+   ④ APP 版本 = 1.0.26
    ⑤ APK 解包回放可用：LD_WWW 指向解包目录时同样通过
    运行：node tools/verify_132_app_icon.js */
 const { spawn } = require('child_process');
@@ -67,7 +67,7 @@ async function main() {
     await send('Page.navigate', { url: URL });
     await sleep(2800);
 
-    console.log('=== APP 1.0.25 自定义图标铺满专项 ===\n');
+    console.log('=== APP 1.0.26 自定义图标铺满专项 ===\n');
 
     /* ---------- ① 静态断言 ---------- */
     const bundle = fs.readFileSync(path.join(ROOT, 'www', 'js', 'bundle.js'), 'utf8');
@@ -77,7 +77,7 @@ async function main() {
     ok('① bundle 含 iconIsCustom 标志', /iconIsCustom/.test(bundle));
     ok('① templates 三处 img 条件加 icon-custom', (tpl.match(/iconIsCustom \? ' icon-custom'/g) || []).length >= 3);
     ok('① shell.css 自定义图标 cover', /\.ct-icon-img\.icon-custom \{ object-fit: cover; \}/.test(shell));
-    ok('④ APP 版本 = 1.0.25', /LD\.APP_VERSION = '1\.0\.25'/.test(shim));
+    ok('④ APP 版本 = 1.0.26', /LD\.APP_VERSION = '1\.0\.26'/.test(shim));
 
     /* ---------- ② 自定义图标计算样式 ---------- */
     const custom = JSON.parse(await evalJs(`(function(){

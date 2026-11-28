@@ -114,7 +114,7 @@ async function main() {
     ok('⑤ 面板无 NaN/undefined/Infinity', cards.single && cards.project && !cards.single.hasNaN && !cards.project.hasNaN,
        JSON.stringify({s:cards.single&&cards.single.hasNaN,p:cards.project&&cards.project.hasNaN}));
     /* ⑥ 版本 */
-    ok('⑥ 版本号 = 1.0.25', cards.ver === '1.0.25', cards.ver);
+    ok('⑥ 版本号 = 1.0.25', cards.ver === '1.0.26', cards.ver);
 
     /* ⑥b 启动时间：项目卡 .ct-status 显示 Up 时长，与单容器卡同格式 */
     const sst = cards.single ? (cards.single.statusTexts || []) : [];

@@ -9,7 +9,7 @@
 
   var LD = global.LD = global.LD || {};
   LD.APP_NAME = 'LiteDock';
-  LD.APP_VERSION = '1.0.25';
+  LD.APP_VERSION = '1.0.26';
 
   /* 1.0.9：长按复制不再叠加两个「已复制」提示。
      ★ 取证（用户 1.0.8 真机截图）：绿色方块「已复制」= APP 的 #ld-toast.ok
